@@ -5,10 +5,6 @@ export function multiply(point: Point) {
     return point[0] * point[1]
 }
 
-export function getId(input:IdAndName) {
-    return input[0]
-}
-
-export function getName(input: IdAndName) {
-    return input[1]
+export function getUser(id: number, name: string):IdAndName {
+    return [id, name]
 }
