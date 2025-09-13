@@ -1,4 +1,5 @@
-import { Card } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Mail, Phone } from "lucide-react"
 
 export default function ComponentProperties() {
     return (
@@ -17,7 +18,7 @@ export default function ComponentProperties() {
 type ProfileInfo = {
     name: string
     phone: string
-    email: string
+    email?: string
 }
 
 const MEMBERS:ProfileInfo[] = [
@@ -29,12 +30,10 @@ const MEMBERS:ProfileInfo[] = [
     {
         name : 'Maung Maung',
         phone : "09282872724",
-        email : "maung@gmail.com"
     },
     {
         name : 'Thidar',
         phone : "09282872725",
-        email : "thidar@gmail.com"
     },
     {
         name : 'Nilar',
@@ -44,13 +43,22 @@ const MEMBERS:ProfileInfo[] = [
     {
         name : 'Mya Mya',
         phone : "09282872727",
-        email : "mya@gmail.com"
     }
 ]
 
 function Profile({info} : {info : ProfileInfo}) {
     return (
-        <Card></Card>
+        <Card>
+            <CardHeader>
+                <CardTitle>{info.name}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="flex items-center gap-2"><Phone size={16} /> {info.phone}</div>
+                {info.email &&
+                    <div className="flex items-center gap-2"><Mail size={16} /> {info.email}</div>
+                }
+            </CardContent>
+        </Card>
     )
 }
 
