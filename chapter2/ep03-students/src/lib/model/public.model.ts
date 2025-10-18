@@ -17,7 +17,7 @@ export type CourseDetails = CourseSummary & {
 }
 
 export type Schedule = {
-    day: 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN'
+    day: string
     startTime: string
     endTime: string
 }
