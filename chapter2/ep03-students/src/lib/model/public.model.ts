@@ -7,6 +7,15 @@ export type CourseSummary = {
     icon: keyof typeof lucideIcons
 }
 
+export type CourseTopics = {
+    title: string
+    description: string
+}
+
+export type CourseDetails = CourseSummary & {
+    topics: CourseTopics[]
+}
+
 export type Schedule = {
     day: 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN'
     startTime: string

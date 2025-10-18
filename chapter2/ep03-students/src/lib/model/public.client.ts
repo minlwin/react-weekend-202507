@@ -1,10 +1,20 @@
-"use server-only"
+import "server-only"
 
 import { addDays, formatDate } from "date-fns";
-import { ClassSummary, CourseSummary } from "../model/public.model";
+import { ClassSummary, CourseDetails, CourseSummary } from "./public.model";
+import { title } from "process";
 
 export async function getCoursSummary():Promise<CourseSummary[]> {
     return COURSES
+}
+
+export async function getCourseById(id:string):Promise<CourseDetails | undefined> {
+    return COURSES.filter(a => a.id === id).map(a => ({...a, topics: [
+        {title: "Language Foundation", description : "How to write a java program. Varaibles, Methods, Operators, Expression, Statements. etc."},
+        {title: "OOP", description : "Object Oriented Programming Concepts in Java Language. Object, Classes, Encapsulation, Inheritance, Abstraction, Polymorphism."},
+        {title: "Essential Java API", description : "Java API in Standard Java SE. Exceptions, IO, Generics and Collections, Lambda Expression and Streams API."},
+        {title: "New Language Features", description : "New Features up to Java 25."},
+    ]})).pop()
 }
 
 export async function getAvailableClasses():Promise<ClassSummary[]> {

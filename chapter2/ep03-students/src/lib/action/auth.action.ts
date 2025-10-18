@@ -1,6 +1,6 @@
 "use server"
 
-import { signInRequest } from "../client/auth.client";
+import { signInRequest } from "../model/auth.client";
 import { SignInForm, SignInResult } from "../model/auth.model";
 
 export async function signInAction(form:SignInForm):Promise<SignInResult> {

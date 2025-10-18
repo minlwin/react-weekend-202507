@@ -4,8 +4,11 @@ import { BookOpen, House } from "lucide-react";
 import Link from "next/link";
 
 import * as lucideIcons from 'lucide-react'
-import * as homeClient from '@/lib/client/home-data.client'
-import { ClassSummary, CourseSummary } from "@/lib/model/public.model";
+import * as homeClient from '@/lib/model/public.client'
+import { ClassSummary } from "@/lib/model/public.model";
+import AppFooter from "@/components/app/app-footer";
+import PublicCourses from "@/components/app/public-courses";
+
 
 export default async function Home() {
 
@@ -20,19 +23,19 @@ export default async function Home() {
 
       <AboutUs />
       
-      <OurCourses data={courses} />
+      <PublicCourses data={courses} />
 
       <AvailableClasses data={classes} />
       
-      {/* Footer */}
+      <AppFooter />
     </div>
   )
 }
 
 function Navigation() {
     return (
-        <nav className="sticky top-0 z-50 bg-white">
-            <div className="px-16 py-4 flex justify-between items-end">
+        <nav className="sticky top-0 z-50 bg-white shadow">
+            <div className="px-8 py-4 flex justify-between items-end">
                 <Link href={"/"} className="flex items-center gap-2"><House className="size-5"/> <span className="text-xl text-foreground/80">Java Developer Class</span></Link>
             
                 <div className="space-x-6">
@@ -173,44 +176,5 @@ function AboutUs() {
         </div>
       </div>
     </section>
-  )
-}
-
-function OurCourses({data} : {data : CourseSummary []}) {
-  return (
-    <section className="min-h-screen pt-20 px-16" id="ourCourse">
-
-      <h1 className="text-center text-3xl">Our Courses</h1>
-
-      <div className="grid grid-cols-3 gap-8 mt-6">
-        {data.map(item => 
-          <CourseInfo key={item.id} data={item} />
-        )}
-      </div>
-    </section>
-  )
-}
-
-function CourseInfo({data} : {data : CourseSummary}) {
-  
-  const IconComponent = lucideIcons[data.icon] as lucideIcons.LucideIcon
-  
-  return (
-    <Card>
-      <CardContent className="flex flex-col justify-between h-full gap-4">
-        <div className="space-y-4">
-          <IconComponent className="size-16" />
-          <CardTitle>{data.name}</CardTitle>
-          <CardDescription className="line-clamp-3">{data.description}</CardDescription>
-        </div>
-        
-        <Button asChild>
-          <Link href={""}>
-            <BookOpen /> Read More
-          </Link>
-        </Button>
-
-      </CardContent>
-    </Card>
   )
 }

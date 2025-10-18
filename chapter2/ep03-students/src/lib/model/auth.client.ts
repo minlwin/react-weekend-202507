@@ -1,6 +1,6 @@
-"use server-only"
+import "server-only"
 
-import { SignInForm, SignInResponse } from "../model/auth.model";
+import { SignInForm, SignInResponse } from "./auth.model";
 
 export async function signInRequest(form: SignInForm) {
     
