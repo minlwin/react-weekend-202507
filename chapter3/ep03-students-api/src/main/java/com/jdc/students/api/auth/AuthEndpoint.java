@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jdc.students.api.auth.input.SignInForm;
 import com.jdc.students.api.auth.input.SignUpForm;
 import com.jdc.students.api.auth.output.SignInResponse;
-import com.jdc.students.model.Role;
+import com.jdc.students.model.dto.Role;
 
 import lombok.extern.slf4j.Slf4j;
 

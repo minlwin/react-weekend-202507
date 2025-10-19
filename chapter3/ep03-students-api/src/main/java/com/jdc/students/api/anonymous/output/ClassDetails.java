@@ -3,8 +3,8 @@ package com.jdc.students.api.anonymous.output;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.jdc.students.model.ClassType;
-import com.jdc.students.model.Schedule;
+import com.jdc.students.model.dto.ClassType;
+import com.jdc.students.model.dto.Schedule;
 
 public record ClassDetails(
 		int id,
@@ -15,6 +15,7 @@ public record ClassDetails(
 		int monthlyFees,
 		int registrationFees,
 		List<Schedule> schedules, 
+		boolean deleted,
 		long applied) {
 
 }

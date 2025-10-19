@@ -1,6 +1,6 @@
 package com.jdc.students.api.auth.output;
 
-import com.jdc.students.model.Role;
+import com.jdc.students.model.dto.Role;
 
 public record SignInResponse(
 		String name,

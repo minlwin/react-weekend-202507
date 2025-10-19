@@ -2,7 +2,7 @@ package com.jdc.students.model.entity;
 
 import java.io.Serializable;
 
-import com.jdc.students.model.Role;
+import com.jdc.students.model.dto.Role;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

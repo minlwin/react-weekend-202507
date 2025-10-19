@@ -3,8 +3,8 @@ package com.jdc.students.model.entity;
 import java.io.Serializable;
 import java.util.List;
 
-import com.jdc.students.model.CourseTopic;
 import com.jdc.students.model.converter.CourseTopicsConverter;
+import com.jdc.students.model.dto.CourseTopic;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -35,10 +35,14 @@ public class Course implements Serializable {
 	
 	@Column(nullable = false)
 	private int months;
+	
+	private String description;
 
 	@Convert(converter = CourseTopicsConverter.class)
 	@Column(nullable = false, columnDefinition = "TEXT")
 	private List<CourseTopic> topics;
+	
+	private boolean deleted;
 	
 	public enum Level {
 		Basic, Intermediate, Advance, AllInOne {

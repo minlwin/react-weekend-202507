@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.jdc.students.model.ClassType;
-import com.jdc.students.model.Schedule;
 import com.jdc.students.model.converter.SchedulesConverter;
+import com.jdc.students.model.dto.ClassType;
+import com.jdc.students.model.dto.Schedule;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -48,4 +48,6 @@ public class Classes implements Serializable{
 	@Convert(converter = SchedulesConverter.class)
 	@Column(nullable = false, columnDefinition = "TEXT")
 	private List<Schedule> schedules;
+	
+	private boolean deleted;
 }
