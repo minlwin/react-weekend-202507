@@ -1,4 +1,4 @@
-package com.jdc.students.auth.api.output;
+package com.jdc.students.api.auth.output;
 
 import com.jdc.students.model.Role;
 

@@ -1,4 +1,4 @@
-package com.jdc.students.auth.api.input;
+package com.jdc.students.api.auth.input;
 
 import jakarta.validation.constraints.NotBlank;
 

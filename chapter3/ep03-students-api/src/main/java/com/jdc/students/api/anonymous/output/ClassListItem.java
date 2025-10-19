@@ -1,4 +1,4 @@
-package com.jdc.students.anonymous.output;
+package com.jdc.students.api.anonymous.output;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -6,14 +6,14 @@ import java.util.List;
 import com.jdc.students.model.ClassType;
 import com.jdc.students.model.Schedule;
 
-public record ClassDetails(
+public record ClassListItem(
 		int id,
-		CourseDetails course,
+		CourseListItem course,
 		ClassType type,
 		LocalDate startAt,
 		int months,
 		int monthlyFees,
-		List<Schedule> schedules, 
-		long applied) {
+		List<Schedule> schedules
+		) {
 
 }
