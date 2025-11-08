@@ -1,0 +1,1 @@
+insert into DIVISION (name, capital, region) values ('Ayeyarwady Region', 'Pathein', 'Lower');
