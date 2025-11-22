@@ -24,6 +24,7 @@ public class Ep05SecurityAdminInitializer {
 	void initializeAdmin() {
 		if(accountRepo.count() == 0L) {
 			var account = new Account();
+			account.setName("Admin User");
 			account.setEmail("admin@gmail.com");
 			account.setRole(Role.Admin);
 			account.setPassword(passwordEncoder.encode("password"));
