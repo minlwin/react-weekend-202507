@@ -12,7 +12,7 @@
 	<groupId>com.jd.weekend</groupId>
 	<artifactId>ep05-rest-security</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ep05-rest-security</name>
+	<name>ep06-rest-security</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>25</java.version>
