@@ -9,4 +9,6 @@ import com.jdc.weekend.rest.model.entity.Account;
 public interface AccountRepo extends JpaRepository<Account, Integer>{
 
 	Optional<Account> findOneByEmail(String email);
+
+	Long countByEmail(String email);
 }

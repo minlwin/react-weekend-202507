@@ -10,6 +10,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
+
+import com.jdc.weekend.rest.exception.SecurityExceptionResolver;
+import com.jdc.weekend.rest.security.JwtTokenFilter;
 
 @Configuration
 public class SecurityConfiguration {
@@ -28,6 +32,12 @@ public class SecurityConfiguration {
 			req.anyRequest().authenticated();
 		});
 		
+		http.addFilterAfter(jwtTokenFilter(), ExceptionTranslationFilter.class);
+		
+		http.exceptionHandling(ex -> {
+			ex.authenticationEntryPoint(securityExceptionResolver());
+			ex.accessDeniedHandler(securityExceptionResolver());
+		});
 		
 		return http.build();
 	}
@@ -40,6 +50,16 @@ public class SecurityConfiguration {
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+	JwtTokenFilter jwtTokenFilter() {
+		return new JwtTokenFilter();
+	}
+	
+	@Bean
+	SecurityExceptionResolver securityExceptionResolver() {
+		return new SecurityExceptionResolver();
 	}
 
 }
