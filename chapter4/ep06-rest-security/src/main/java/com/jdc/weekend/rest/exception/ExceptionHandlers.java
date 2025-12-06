@@ -4,7 +4,9 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -37,7 +39,12 @@ public class ExceptionHandlers {
 	@ExceptionHandler
 	@ResponseStatus(code = HttpStatus.UNAUTHORIZED)
 	List<String> handle(AuthenticationException e) {
-		return List.of(e.getMessage());
+		return List.of(switch(e) {
+		case UsernameNotFoundException _ -> "Please check your email for login.";
+		case BadCredentialsException _ -> "Please check your password.";
+		case InvalidTokenException _-> "Invalid JWT Token.";
+		default -> "Authentication Failure.";
+		});
 	}
 	
 	@ExceptionHandler
