@@ -4,6 +4,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,20 +27,20 @@ public class AuthApi {
 	private final JwtTokenService tokenService;
 	
 	@PostMapping("signin")
-	AuthResult signIn(@Validated SignInForm form) {
+	AuthResult signIn(@RequestBody @Validated SignInForm form) {
 		var authentication = authenticationManager.authenticate(form.authentication());
 		return getResult(authentication);
 	}
 
 	@PostMapping("signup")
-	AuthResult signUp(@Validated SignUpForm form) {
+	AuthResult signUp(@RequestBody @Validated SignUpForm form) {
 		var authentication = accountService.signUp(form);
 		authentication = authenticationManager.authenticate(authentication);	
 		return getResult(authentication);
 	}
 	
 	@PostMapping("refresh")
-	AuthResult refresh(@Validated TokenForm form) {
+	AuthResult refresh(@RequestBody @Validated TokenForm form) {
 		var authentication = tokenService.parseRefreshToken(form.token());
 		return getResult(authentication);
 	}

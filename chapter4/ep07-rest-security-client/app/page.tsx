@@ -1,6 +1,4 @@
 import MenuLink from "@/components/widgets/menu-link";
-import { DoorOpen, MenuIcon } from "lucide-react";
-import Link from "next/link";
 
 export default function Home() {
   return (
