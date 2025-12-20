@@ -1,0 +1,14 @@
+package com.jdc.balance.utils.security;
+
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AppAuthenticationProvider extends DaoAuthenticationProvider {
+
+	public AppAuthenticationProvider(AppUserDetailsService userDetailsService) {
+		super(userDetailsService);
+		setHideUserNotFoundExceptions(false);
+	}
+
+}
