@@ -1,5 +1,8 @@
 package com.jdc.balance.model.entity;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,5 +32,9 @@ public class Account {
 	
 	public enum Role {
 		Admin, Member
+	}
+
+	public Authentication authentication() {
+		return UsernamePasswordAuthenticationToken.unauthenticated(email, password);
 	}
 }

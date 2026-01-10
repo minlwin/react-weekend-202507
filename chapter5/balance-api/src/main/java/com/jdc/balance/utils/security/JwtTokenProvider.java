@@ -11,4 +11,19 @@ public class JwtTokenProvider {
 		return null;
 	}
 
+	public Authentication parseRefresh(String token) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String createAccessToken(Authentication auth) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String createRefreshToken(Authentication auth) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
