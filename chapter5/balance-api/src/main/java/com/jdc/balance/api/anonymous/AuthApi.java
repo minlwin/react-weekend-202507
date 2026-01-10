@@ -2,6 +2,7 @@ package com.jdc.balance.api.anonymous;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +36,7 @@ public class AuthApi {
 	@PostMapping("signup")
 	AuthResult signUp(@Validated @RequestBody SignUpForm form) {
 		var account = accountService.create(form);
-		return signIn(account.authentication());
+		return signIn(UsernamePasswordAuthenticationToken.unauthenticated(account.getEmail(), form.password()));
 	}
 	
 	@PostMapping("refresh")

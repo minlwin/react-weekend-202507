@@ -1,4 +1,4 @@
-package com.jdc.balance.utils.exceptions;
+package com.jdc.balance.utils.exceptions.handlers;
 
 import java.io.IOException;
 

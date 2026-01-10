@@ -1,7 +1,8 @@
 package com.jdc.balance.model.entity;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.CreatedDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,11 +31,12 @@ public class Account {
 	@Column(nullable = false)
 	private Role role;
 	
+	private boolean disabled = false;
+	
+	@CreatedDate
+	private LocalDateTime registeredAt;
+	
 	public enum Role {
 		Admin, Member
-	}
-
-	public Authentication authentication() {
-		return UsernamePasswordAuthenticationToken.unauthenticated(email, password);
 	}
 }

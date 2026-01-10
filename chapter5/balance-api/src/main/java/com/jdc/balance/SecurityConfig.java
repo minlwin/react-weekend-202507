@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,11 +16,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 
 import com.jdc.balance.model.BaseRepositoryImpl;
-import com.jdc.balance.utils.exceptions.SecurityExceptionHandler;
+import com.jdc.balance.utils.exceptions.handlers.SecurityExceptionHandler;
 import com.jdc.balance.utils.security.JwtTokenFilter;
 
 @Configuration
 @EnableJpaAuditing
+@EnableMethodSecurity
 @EnableJpaRepositories(repositoryBaseClass = BaseRepositoryImpl.class)
 public class SecurityConfig {
 	

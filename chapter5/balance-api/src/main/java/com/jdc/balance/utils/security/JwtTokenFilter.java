@@ -23,8 +23,8 @@ public class JwtTokenFilter extends OncePerRequestFilter{
 		
 		var authToken = request.getHeader("Authorization");
 		
-		if(StringUtils.hasLength(authToken) && authToken.startsWith("Bearer ")) {
-			var authentication = tokenProvider.parseAccess(authToken);
+		if(StringUtils.hasLength(authToken) && authToken.startsWith(JwtTokenProvider.PREFIX)) {
+			var authentication = tokenProvider.parseAccess(authToken.substring(JwtTokenProvider.PREFIX.length()));
 			
 			if(null != authentication) {
 				SecurityContextHolder.getContext().setAuthentication(authentication);
