@@ -8,6 +8,7 @@ import FormsInput from "@/components/fields/forms-input"
 import { Button } from "@/components/ui/button"
 import { LogIn, UserPlus } from "lucide-react"
 import Link from "next/link"
+import { safeCall } from "@/lib/utils"
 
 export default function SignUpFormComponent() {
 
@@ -20,8 +21,12 @@ export default function SignUpFormComponent() {
         }
     })
 
+    async function submit(form: SignUpForm) {
+        await safeCall(async () => signUpAction(form))
+    }
+
     return (
-        <form onSubmit={form.handleSubmit(signUpAction)} className="space-y-5">
+        <form onSubmit={form.handleSubmit(submit)} className="space-y-5">
             <FormsInput control={form.control} name="name" label="User Name" />
             <FormsInput control={form.control} name="email" type="email" label="Email" />
             <FormsInput control={form.control} name="password" type="password" label="Password" />

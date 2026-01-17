@@ -14,10 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
-import org.springframework.security.web.authentication.AuthenticationFilter;
 
 import com.jdc.balance.model.BaseRepositoryImpl;
-import com.jdc.balance.utils.debug.DebugFilter;
 import com.jdc.balance.utils.exceptions.handlers.SecurityExceptionHandler;
 import com.jdc.balance.utils.security.JwtTokenFilter;
 
@@ -46,7 +44,6 @@ public class SecurityConfig {
 			exception.authenticationEntryPoint(securityExceptionHandler());
 		});
 		
-		http.addFilterBefore(new DebugFilter(), AuthenticationFilter.class);
 		http.addFilterAfter(jwtTokenFilter(), ExceptionTranslationFilter.class);
 		
 		return http.build();

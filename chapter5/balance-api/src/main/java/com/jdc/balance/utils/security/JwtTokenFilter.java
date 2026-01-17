@@ -23,8 +23,6 @@ public class JwtTokenFilter extends OncePerRequestFilter{
 		
 		var authToken = request.getHeader("Authorization");
 		
-		System.out.println(request.getRequestURI());
-		
 		if(StringUtils.hasLength(authToken) && authToken.startsWith(JwtTokenProvider.PREFIX)) {
 			var authentication = tokenProvider.parseAccess(authToken.substring(JwtTokenProvider.PREFIX.length()));
 			
