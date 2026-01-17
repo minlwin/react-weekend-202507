@@ -21,6 +21,8 @@ public class SecurityExceptionHandler implements AuthenticationEntryPoint, Acces
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
+		System.out.println(request.getRequestURI());
+		authException.printStackTrace();
 		handlerExceptionResolver.resolveException(request, response, null, authException);
 	}
 

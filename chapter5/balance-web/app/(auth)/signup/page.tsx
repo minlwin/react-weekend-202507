@@ -1,4 +1,4 @@
-import SignUpForm from "@/components/forms/signup-form";
+import SignUpFormComponent from "@/app/(auth)/signup/_client/signup-form";
 import PageTitle from "@/components/widgets/page-title";
 import { Metadata } from "next";
 
@@ -11,7 +11,7 @@ export default function SignUpPage() {
     return (
         <section className="space-y-6">
             <PageTitle icon="UserPlus" title="Sign Up" />
-            <SignUpForm />
+            <SignUpFormComponent />
         </section>
     )
 }

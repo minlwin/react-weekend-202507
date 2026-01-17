@@ -1,10 +1,17 @@
 import { Button } from "@/components/ui/button";
+import { getLoginUser, isLogIn } from "@/lib/login-user";
 import { HomeIcon, PieChart } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import React from "react";
-import Home from "../page";
 
-export default function AuthLayout({children} : {children : React.ReactNode}) {
+export default async function AuthLayout({children} : {children : React.ReactNode}) {
+    
+    if(await isLogIn()) {
+        const loginUser = await getLoginUser()
+        redirect(`/${loginUser.role.toLocaleLowerCase()}`)
+    }
+    
     return (
         <div className="h-screen flex">
 

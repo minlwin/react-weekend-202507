@@ -18,7 +18,7 @@ export default function FormsInput<T extends FieldValues>({label, name, control,
                 {label && 
                     <FieldLabel>{label}</FieldLabel>
                 }
-                <Input {...field} type={type} placeholder={placeholder || `Enter ${label || 'Input'}`} />
+                <Input {...field} type={type} autoComplete="off" placeholder={placeholder || `Enter ${label || 'Input'}`} />
                 {fieldState.invalid && 
                     <FieldError errors={[fieldState.error]} />
                 }

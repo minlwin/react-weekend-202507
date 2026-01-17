@@ -1,17 +1,17 @@
 "use client"
 
-import { signUpAction } from "@/lib/actions/signup-action"
-import { SignUpFormType, SignUpSchema } from "@/lib/schema/signup-schema"
+import { signUpAction } from "@/lib/actions/auth.action"
+import { SignUpForm, SignUpSchema } from "@/lib/schema/auth.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import FormsInput from "../fields/forms-input"
-import { Button } from "../ui/button"
+import FormsInput from "@/components/fields/forms-input"
+import { Button } from "@/components/ui/button"
 import { LogIn, UserPlus } from "lucide-react"
 import Link from "next/link"
 
-export default function SignUpForm() {
+export default function SignUpFormComponent() {
 
-    const form = useForm<SignUpFormType>({
+    const form = useForm<SignUpForm>({
         resolver: zodResolver(SignUpSchema),
         defaultValues: {
             name: "",
