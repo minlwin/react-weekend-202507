@@ -2,8 +2,8 @@ import { redirect } from "next/navigation"
 import { getAccessToken, getRefreshToken, setAuthResult } from "./login-user"
 import { AuthResult } from "./schema/auth.schema"
 
-export async function publicRequest(path:string, options : RequestInit = {}) {
-    const response = await fetch(url(path), options)
+export async function publicRequest(path:string, options : RequestInit = {}, search? : {[key:string] : any}) {
+    const response = await fetch(url(path, search), options)
 
     if(!response.ok) {
         const message = await response.json()
@@ -13,12 +13,12 @@ export async function publicRequest(path:string, options : RequestInit = {}) {
     return response
 }
 
-export async function secureRequest(path:string, options : RequestInit = {}) {
+export async function secureRequest(path:string, options : RequestInit = {}, search? : {[key:string] : any}) {
 
     let response : Response | undefined
 
     async function fetchWithToken(token : string) {
-        return await fetch(url(path), {
+        return await fetch(url(path, search), {
             ...options,
             headers: {
                 ...options.headers,
@@ -73,8 +73,23 @@ export async function secureRequest(path:string, options : RequestInit = {}) {
     return response
 }
 
-function url(path:string) {
-    return `${process.env.BACKEND_URL}/${path}`
+export async function publicSearch(path:string, search? : {[key:string] : any}) {
+    return publicRequest(path, {}, search)
+}
+
+export async function secureSearch(path:string, search? : {[key:string] : any}) {
+    return secureRequest(path, {}, search)
+}
+
+function url(path:string, search? : {[key:string] : any}) {
+    
+    const url = new URL(`${process.env.BACKEND_URL}/${path}`)
+    
+    if(search) {
+        url.search = new URLSearchParams(search).toString()
+    }
+    
+    return url.toString()
 }
 
 export const POST_CONFIG:RequestInit = {

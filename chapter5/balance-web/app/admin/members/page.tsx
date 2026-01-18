@@ -1,5 +1,9 @@
+import PageTitle from "@/components/widgets/page-title";
+
 export default function MemberManagementPage() {
     return (
-        <>Member Management</>
+        <section>
+            <PageTitle title="Member Management" icon="Users" />
+        </section>
     )
 }

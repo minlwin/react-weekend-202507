@@ -1,23 +1,9 @@
 import IconLink from "@/components/widgets/icon-link";
 import SignOutMenu from "@/components/widgets/signout-menu";
-import { getLoginUser, isLogIn } from "@/lib/login-user";
-import { redirect } from "next/navigation";
 import React from "react";
 
 export default async function AdminLayout({children} : {children : React.ReactNode}) {
-    
-    const authenticated = await isLogIn()
-    if(!authenticated) {
-        redirect("/signin")
-    }
-
-    if(authenticated) {
-        const user = await getLoginUser()
-        if(user.role != "Admin") {
-            redirect(`/${user.role.toLocaleLowerCase()}?message=You can't access to Admin Home.`)
-        }
-    }
-    
+        
     return (
         <div className="min-h-screen">
             <nav className="px-6 py-4 shadow flex items-center justify-between">

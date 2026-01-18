@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jdc.balance.api.admin.input.MemberSearch;
@@ -25,8 +26,11 @@ public class MemberManagementApi {
 	private AccountService service;
 
 	@GetMapping
-	PageResult<MemberListItem> search(MemberSearch search) {
-		return service.search(search);
+	PageResult<MemberListItem> search(
+			MemberSearch search, 
+			@RequestParam(required = false, defaultValue = "0") int page, 
+			@RequestParam(required = false, defaultValue = "10") int size) {
+		return service.search(search, page, size);
 	}
 	
 	@GetMapping("{id}")

@@ -1,5 +1,7 @@
 package com.jdc.balance.model.services;
 
+import java.util.function.Function;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,8 +16,12 @@ import com.jdc.balance.api.anonymous.input.SignUpForm;
 import com.jdc.balance.model.DataModificationResult;
 import com.jdc.balance.model.PageResult;
 import com.jdc.balance.model.entity.Account;
+import com.jdc.balance.model.entity.Account_;
 import com.jdc.balance.model.repo.AccountRepo;
 import com.jdc.balance.utils.exceptions.BusinessException;
+
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
 
 @Service
 public class AccountService {
@@ -48,9 +54,26 @@ public class AccountService {
 	}
 
 	@PreAuthorize("hasAuthority('Admin')")
-	public PageResult<MemberListItem> search(MemberSearch search) {
-		// TODO Auto-generated method stub
-		return null;
+	public PageResult<MemberListItem> search(MemberSearch search, int page, int size) {
+		
+		Function<CriteriaBuilder, CriteriaQuery<MemberListItem>> queryFunc = cb -> {
+			var cq = cb.createQuery(MemberListItem.class);
+			var root = cq.from(Account.class);
+			cq.where(search.where(cb, root));
+			cq.select(MemberListItem.select(cb, root));
+			cq.orderBy(cb.desc(root.get(Account_.registeredAt)));
+			return cq;
+		};
+		
+		Function<CriteriaBuilder, CriteriaQuery<Long>> countFun = cb -> {
+			var cq = cb.createQuery(Long.class);
+			var root = cq.from(Account.class);
+			cq.where(search.where(cb, root));
+			cq.select(cb.count(root.get(Account_.id)));
+			return cq;
+		};
+
+		return accountRepo.search(queryFunc, countFun, page, size);
 	}
 
 	@PreAuthorize("hasAuthority('Admin')")
