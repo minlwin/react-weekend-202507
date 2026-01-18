@@ -1,5 +1,6 @@
 package com.jdc.balance.model.services;
 
+import java.time.LocalDateTime;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,14 @@ import com.jdc.balance.model.PageResult;
 import com.jdc.balance.model.entity.Account;
 import com.jdc.balance.model.entity.Account_;
 import com.jdc.balance.model.repo.AccountRepo;
+import com.jdc.balance.utils.Nullsafe;
 import com.jdc.balance.utils.exceptions.BusinessException;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 
 @Service
+@Transactional(readOnly = true)
 public class AccountService {
 	
 	@Autowired
@@ -44,11 +47,11 @@ public class AccountService {
 		account.setEmail(form.email());
 		account.setPassword(passwordEncoder.encode(form.password()));
 		account.setRole(Account.Role.Member);
+		account.setRegisteredAt(LocalDateTime.now());
 		
 		return accountRepo.save(account);
 	}
 
-	@Transactional(readOnly = true)
 	public Account findByEmail(String name) {
 		return accountRepo.findOneByEmail(name).orElseThrow();
 	}
@@ -76,15 +79,20 @@ public class AccountService {
 		return accountRepo.search(queryFunc, countFun, page, size);
 	}
 
+	@Transactional
 	@PreAuthorize("hasAuthority('Admin')")
-	public DataModificationResult<Integer> update(MemberStatusForm form) {
-		// TODO Auto-generated method stub
-		return null;
+	public DataModificationResult<Integer> update(int id, MemberStatusForm form) {
+		
+		var entity = Nullsafe.call(accountRepo.findById(id), "Member", id);
+		entity.setDisabled(form.disabled());
+		
+		return new DataModificationResult<>(entity.getId());
 	}
 
 	@PreAuthorize("hasAuthority('Admin')")
 	public MemberDetails findById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return Nullsafe.call(
+			accountRepo.findById(id).map(MemberDetails::from), 
+			"Member", id);
 	}	
 }

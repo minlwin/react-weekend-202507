@@ -1,5 +1,5 @@
 import PageTitle from "@/components/widgets/page-title";
-import MemberSearchComponent from "./_client/member-search-component";
+import MemberDetailsComponent from "../_client/member-details-component";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   description: "Member Management page of Balance Application.",
 };
 
-export default function MemberManagementPage() {
+export default function MemberDetailsPage() {
     return (
-        <section className="space-y-6">
-            <PageTitle title="Member Management" icon="Users" />
-            <MemberSearchComponent />
+        <section>
+            <PageTitle title="Member Details" icon="User" />
+            <MemberDetailsComponent />
         </section>
     )
 }

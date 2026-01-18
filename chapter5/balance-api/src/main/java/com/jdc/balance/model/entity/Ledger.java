@@ -1,11 +1,15 @@
 package com.jdc.balance.model.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jdc.balance.model.AbstractEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -28,6 +32,9 @@ public class Ledger extends AbstractEntity{
 	
 	@ManyToOne(optional = false)
 	private Account owner;
+	
+	@OneToMany(mappedBy = "ledger")
+	private List<LedgerEntry> entries = new ArrayList<>();
 	
 	public enum Type {
 		Debit, Credit

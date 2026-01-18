@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { redirect } from "next/navigation"
 import { getAccessToken, getRefreshToken, setAuthResult } from "./login-user"
 import { AuthResult } from "./schema/auth.schema"

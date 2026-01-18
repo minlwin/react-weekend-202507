@@ -1,14 +1,15 @@
 package com.jdc.balance.model.entity;
 
 import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.CreatedDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Data
@@ -33,8 +34,10 @@ public class Account {
 	
 	private boolean disabled = false;
 	
-	@CreatedDate
 	private LocalDateTime registeredAt;
+	
+	@OneToMany(mappedBy = "owner")
+	private List<Ledger> ledgers = new ArrayList<Ledger>();
 	
 	public enum Role {
 		Admin, Member

@@ -13,3 +13,17 @@ export type PageResult<T> = {
 export type DataModificationResult<T> = {
     id: T
 }
+
+export type PageSearch = {
+    page?: number
+    size?: number
+}
+
+export const DEFAULT_PAGE_RESULT:PageResult<any> = {
+    contents: [],
+    count: 0,
+    page: 0,
+    size: 0,
+    totalPages: 0,
+    links: []
+}
