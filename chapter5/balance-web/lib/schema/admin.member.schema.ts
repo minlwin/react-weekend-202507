@@ -22,7 +22,7 @@ export type MemberDetails = {
 } & MemberListItem
 
 export const MemberStatusSchema = z.object({
-    status : z.string().nonempty("Please select status.")
+    disabled : z.string().nonempty("Please select status.")
 })
 
 export type MemberStatusForm = z.infer<typeof MemberStatusSchema>

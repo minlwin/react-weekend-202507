@@ -12,9 +12,11 @@ import Information from "@/components/widgets/information"
 import InformationCard from "@/components/widgets/information-card"
 import { Button } from "@/components/ui/button"
 import { Check, X } from "lucide-react"
+import ConfirmDialog from "@/components/widgets/confirm-dialog"
 
 export default function MemberDetailsComponent() {
     const { id } = useParams()
+    const [updated, setUpdated] = useState<Date>()
     const [user, setUser] = useState<MemberDetails>()
     const [initials, setInitials] = useState<string>()
 
@@ -38,10 +40,18 @@ export default function MemberDetailsComponent() {
         }
 
         load()
-    }, [id, setUser])
+    }, [id, setUser, updated])
 
     async function updateStatus() {
-        
+        if(user) {
+            const result = await memberClient.updateStatus(user.id, {
+                disabled: `${!user.disabled}`
+            })
+
+            if(result) {
+                setUpdated(new Date)
+            }
+        }
     }
 
     if(!user) {
@@ -86,10 +96,12 @@ export default function MemberDetailsComponent() {
             </CardContent>
 
             <CardFooter className="justify-end">
-                <Button variant={user.disabled ? "default" : "destructive"} onClick={updateStatus}>
-                    {user.disabled ? <Check /> : <X />} 
-                    <span>{user.disabled ? "Activate" : "Deactivate"}</span>
-                </Button>
+                <ConfirmDialog action={updateStatus} message={`Do you want to ${user.disabled ? 'Activate' : 'Deactivate'}?`}>
+                    <Button variant={user.disabled ? "default" : "destructive"} >
+                        {user.disabled ? <Check /> : <X />} 
+                        <span>{user.disabled ? "Activate" : "Deactivate"}</span>
+                    </Button>
+                </ConfirmDialog>
             </CardFooter>
         </Card>
     )

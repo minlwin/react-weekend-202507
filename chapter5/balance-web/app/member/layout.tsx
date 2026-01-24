@@ -10,6 +10,9 @@ export default async function MemberLayout({children} : {children : React.ReactN
                 <IconLink icon="Home" url="/member" title="BALANCE HOME" className="font-semibold" />
 
                 <div className="flex items-center gap-8">
+                    <IconLink url="/member/balances" icon="PieChart" title="Balances" />
+                    <IconLink url="/member/debit" icon="ArrowDownRight" title="Debit" />
+                    <IconLink url="/member/credit" icon="ArrowUpRight" title="Credit" />
                     <IconLink url="/member/ledgers" icon="Users" title="Ledgers" />
                     <SignOutMenu />
                 </div>
