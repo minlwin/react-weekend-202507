@@ -7,6 +7,7 @@ import org.springframework.util.StringUtils;
 import com.jdc.balance.model.entity.Account_;
 import com.jdc.balance.model.entity.Ledger;
 import com.jdc.balance.model.entity.Ledger.Type;
+import com.jdc.balance.model.entity.LedgerPk_;
 import com.jdc.balance.model.entity.Ledger_;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -29,7 +30,7 @@ public record LedgerSearch(
 		if(StringUtils.hasLength(keyword)) {
 			var param = "%s%%".formatted(keyword.toLowerCase());
 			params.add(cb.or(
-				cb.like(cb.lower(root.get(Ledger_.code)), param),
+				cb.like(cb.lower(root.get(Ledger_.id).get(LedgerPk_.code)), param),
 				cb.like(cb.lower(root.get(Ledger_.name)), param)
 			));
 		}

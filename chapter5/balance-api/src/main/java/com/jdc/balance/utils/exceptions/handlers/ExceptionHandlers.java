@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.jdc.balance.utils.exceptions.BusinessException;
+import com.jdc.balance.utils.exceptions.LoginRequiredException;
 import com.jdc.balance.utils.exceptions.TokenExpirationException;
 
 @RestControllerAdvice
@@ -46,6 +47,7 @@ public class ExceptionHandlers {
 		case UsernameNotFoundException _ -> "Please check your login id.";
 		case BadCredentialsException _ -> "Please check your password.";
 		case DisabledException _ -> "Your account is disabled.";
+		case LoginRequiredException le -> le.getMessage();
 		default -> "Authentication Error.";
 		});
 	}
