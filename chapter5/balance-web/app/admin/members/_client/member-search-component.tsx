@@ -16,8 +16,6 @@ import { Search } from "lucide-react"
 
 export default function MemberSearchComponent() {
 
-    const formRef = useRef<HTMLFormElement>(null)
-
     const form = useForm<MemberSearch>({defaultValues : {
         page: 0,
         size: 10
@@ -34,9 +32,12 @@ export default function MemberSearchComponent() {
     useEffect(() => {
         form.setValue("page", 0)
     }, [form, disabled, from, to, keyword])
-    
+
+    useEffect(() => {
+        form.handleSubmit(search)()
+    }, [form.handleSubmit])
+
     async function search(form:MemberSearch) {
-        console.log(form)
         await safeCall(async () => {
             const response = await memberClient.search(form)
             setResult(response)
@@ -45,18 +46,18 @@ export default function MemberSearchComponent() {
 
     async function onPageChange(page: number) {
         form.setValue("page", page)
-        formRef.current?.submit()
+        form.handleSubmit(search)()
     }
 
     async function onSizeChange(size: number) {
         form.setValue("page", 0)
         form.setValue("size", size)
-        formRef.current?.submit()
+        form.handleSubmit(search)()
     }
 
     return (
         <div className="space-y-4">
-            <form ref={formRef} onSubmit={form.handleSubmit(search)}
+            <form onSubmit={form.handleSubmit(search)}
                 className="flex items-end gap-4">
                 <FormsSelect label="Status" control={form.control} name="disabled" options={[
                     {key: "", value: "All Status"},

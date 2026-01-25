@@ -19,6 +19,7 @@ import com.jdc.balance.model.entity.LedgerPk;
 import com.jdc.balance.model.entity.Ledger_;
 import com.jdc.balance.model.repo.LedgerRepo;
 import com.jdc.balance.utils.Nullsafe;
+import com.jdc.balance.utils.dto.DeleteStatusForm;
 import com.jdc.balance.utils.exceptions.BusinessException;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -94,6 +95,15 @@ public class LedgerService {
 		entity.setName(form.name());
 		entity.setDescription(form.description());
 		
+		return new DataModificationResult<String>(pk.code());
+	}
+
+	@Transactional
+	public DataModificationResult<String> update(String code, DeleteStatusForm form) {
+		var loginUser = loginUserService.getLoginUser();
+		var pk = new LedgerPk(code, loginUser.getId());
+		var entity = Nullsafe.call(ledgerRepo.findById(pk), "Ledger", code);
+		entity.setDeleted(form.deleted());
 		return new DataModificationResult<String>(pk.code());
 	}
 

@@ -1,5 +1,6 @@
 package com.jdc.balance.api.member;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +20,13 @@ import com.jdc.balance.api.member.output.LedgerListItem;
 import com.jdc.balance.model.DataModificationResult;
 import com.jdc.balance.model.PageResult;
 import com.jdc.balance.model.services.LedgerService;
+import com.jdc.balance.utils.dto.DeleteStatusForm;
 
 @RestController
 @RequestMapping("member/ledgers")
 public class LedgerManagementApi {
 	
+	@Autowired
 	private LedgerService service;
 
 	@GetMapping
@@ -49,6 +52,13 @@ public class LedgerManagementApi {
 	DataModificationResult<String> update(
 			@PathVariable String code, 
 			@Validated @RequestBody LedgerUpdateForm form) {
+		return service.update(code, form);
+	}
+
+	@PutMapping("{code}/status")
+	DataModificationResult<String> updateStatus(
+			@PathVariable String code, 
+			@Validated @RequestBody DeleteStatusForm form) {
 		return service.update(code, form);
 	}
 }

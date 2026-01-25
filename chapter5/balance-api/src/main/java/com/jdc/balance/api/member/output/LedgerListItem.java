@@ -36,7 +36,7 @@ public record LedgerListItem(
 			root.get(Ledger_.description),
 			root.get(Ledger_.deleted),
 			root.get(Ledger_.createdAt),
-			root.get(Ledger_.createdBy)
+			root.get(Ledger_.updatedAt)
 		));
 	}
 }

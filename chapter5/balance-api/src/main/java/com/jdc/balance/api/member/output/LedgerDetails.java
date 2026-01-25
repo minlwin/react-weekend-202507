@@ -11,7 +11,7 @@ public record LedgerDetails(
 		String name,
 		Type type,
 		String description,
-		int totalAccount,
+		int totalCount,
 		int totalAmount,
 		boolean deleted,
 		LocalDateTime createdAt,
