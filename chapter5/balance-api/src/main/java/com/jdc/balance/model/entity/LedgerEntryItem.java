@@ -1,5 +1,7 @@
 package com.jdc.balance.model.entity;
 
+import com.jdc.balance.model.entity.pk.EntryItemPk;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -12,10 +14,12 @@ import lombok.Data;
 public class LedgerEntryItem {
 
 	@EmbeddedId
-	private LedgerEntryItemPk id;
+	@JoinColumn(name = "entry_account_id", referencedColumnName = "account_id", insertable = false, updatable = false)
+	@JoinColumn(name = "entry_issue_at", referencedColumnName = "issue_at", insertable = false, updatable = false)
+	@JoinColumn(name = "entry_entry_seq", referencedColumnName = "entry_seq", insertable = false, updatable = false)
+	private EntryItemPk id;
 	
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "entry_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private LedgerEntry entry;
 	
 	@Column(nullable = false)

@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 
 import com.jdc.balance.model.entity.Ledger;
 import com.jdc.balance.model.entity.Ledger.Type;
-import com.jdc.balance.model.entity.LedgerPk_;
 import com.jdc.balance.model.entity.Ledger_;
+import com.jdc.balance.model.entity.pk.LedgerPk_;
 import com.jdc.balance.utils.DateTimesUtils;
 
 import jakarta.persistence.criteria.CriteriaBuilder;

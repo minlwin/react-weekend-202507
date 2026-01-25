@@ -7,8 +7,8 @@ import org.springframework.util.StringUtils;
 import com.jdc.balance.model.entity.Account_;
 import com.jdc.balance.model.entity.Ledger;
 import com.jdc.balance.model.entity.Ledger.Type;
-import com.jdc.balance.model.entity.LedgerPk_;
 import com.jdc.balance.model.entity.Ledger_;
+import com.jdc.balance.model.entity.pk.LedgerPk_;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jdc.balance.model.AbstractEntity;
+import com.jdc.balance.model.entity.pk.LedgerPk;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;

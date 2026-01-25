@@ -1,4 +1,4 @@
-package com.jdc.balance.model.entity;
+package com.jdc.balance.model.entity.pk;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -9,4 +9,7 @@ public record LedgerPk(
 		@Column(name = "account_id")
 		int accountId) {
 
+	public static LedgerPk from(int accountId, String code) {
+		return new LedgerPk(code, accountId);
+	}
 }
