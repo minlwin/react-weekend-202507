@@ -13,6 +13,7 @@ export type LedgerListItem = {
 }
 
 export type LedgerSearch = {
-    type? : LedgerType
+    type? : string
+    deleted?: string
     keyword? : string 
 } & PageSearch

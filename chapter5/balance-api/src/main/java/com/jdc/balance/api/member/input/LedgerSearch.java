@@ -16,6 +16,7 @@ import jakarta.persistence.criteria.Root;
 
 public record LedgerSearch(
 		Type type,
+		Boolean deleted,
 		String keyword) {
 
 	public Predicate[] where(CriteriaBuilder cb, Root<Ledger> root, String name) {
@@ -25,6 +26,10 @@ public record LedgerSearch(
 		
 		if(null != type) {
 			params.add(cb.equal(root.get(Ledger_.type), type));
+		}
+		
+		if(null != deleted) {
+			params.add(cb.equal(root.get(Ledger_.deleted), deleted));
 		}
 		
 		if(StringUtils.hasLength(keyword)) {

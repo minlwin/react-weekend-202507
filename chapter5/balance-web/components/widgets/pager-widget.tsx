@@ -3,7 +3,7 @@
 import { Pager } from "@/lib/schema"
 
 type PagerProps = {
-    info: Pager,
+    info?: Pager,
     onPageChange : (page:number) => void,
     onSizeChange : (size:number) => void
 }
