@@ -1,6 +1,8 @@
 package com.jdc.balance.api.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -42,7 +44,13 @@ public class LedgerEntryApi {
 	@GetMapping("{type}/export")
 	ResponseEntity<byte[]> export(
 			@PathVariable Type type, EntrySearch search, Authentication authentication) {
-		return null;
+		
+		var exportData = service.export(authentication.getName(), type, search);
+		
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=ledger-entry.xlsx")
+				.contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+				.body(exportData);
 	}
 
 	@PostMapping

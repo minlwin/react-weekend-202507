@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jdc.balance.api.member.input.LedgerForm;
 import com.jdc.balance.api.member.input.LedgerSearch;
 import com.jdc.balance.api.member.input.LedgerUpdateForm;
 import com.jdc.balance.api.member.output.LedgerDetails;
 import com.jdc.balance.api.member.output.LedgerListItem;
+import com.jdc.balance.api.member.output.LedgerUploadResult;
 import com.jdc.balance.model.DataModificationResult;
 import com.jdc.balance.model.PageResult;
 import com.jdc.balance.model.services.LedgerService;
@@ -60,5 +62,10 @@ public class LedgerManagementApi {
 			@PathVariable String code, 
 			@Validated @RequestBody DeleteStatusForm form) {
 		return service.update(code, form);
+	}
+	
+	@PostMapping("upload")
+	LedgerUploadResult uploadFile(@RequestParam MultipartFile file, Authentication authentication) {
+		return service.upload(authentication.getName(), file);
 	}
 }

@@ -1,20 +1,30 @@
 package com.jdc.balance.model.services;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.function.Function;
 
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jdc.balance.api.member.input.LedgerForm;
 import com.jdc.balance.api.member.input.LedgerSearch;
 import com.jdc.balance.api.member.input.LedgerUpdateForm;
 import com.jdc.balance.api.member.output.LedgerDetails;
 import com.jdc.balance.api.member.output.LedgerListItem;
+import com.jdc.balance.api.member.output.LedgerUploadItem;
+import com.jdc.balance.api.member.output.LedgerUploadItem.Status;
+import com.jdc.balance.api.member.output.LedgerUploadResult;
 import com.jdc.balance.model.DataModificationResult;
 import com.jdc.balance.model.PageResult;
 import com.jdc.balance.model.entity.Ledger;
+import com.jdc.balance.model.entity.Ledger.Type;
 import com.jdc.balance.model.entity.Ledger_;
 import com.jdc.balance.model.entity.pk.LedgerPk;
 import com.jdc.balance.model.repo.LedgerRepo;
@@ -105,6 +115,80 @@ public class LedgerService {
 		var entity = Nullsafe.call(ledgerRepo.findById(pk), "Ledger", code);
 		entity.setDeleted(form.deleted());
 		return new DataModificationResult<String>(pk.code());
+	}
+
+	@Transactional
+	@PreAuthorize("authentication.name eq #ownerName")
+	public LedgerUploadResult upload(String ownerName, MultipartFile file) {
+		
+		if(file.isEmpty()) {
+			throw new BusinessException("Please upload ledger file.");
+		}
+		
+		var loginUser = loginUserService.getLoginUser();
+		
+		var created = 0;
+		var skipped = 0;
+		var error = 0;
+		
+		var list = new ArrayList<LedgerUploadItem>();
+		
+		try(var workbook = WorkbookFactory.create(file.getInputStream())) {
+			
+			var sheet = workbook.getSheetAt(0);
+			
+			for(var i = 0; i <= sheet.getLastRowNum(); i ++) {
+				var entity = new Ledger();
+				var message = "";
+				var isNew = true;
+				
+				try {
+					var row = sheet.getRow(i);
+					var type = row.getCell(0).getStringCellValue();
+					var code = row.getCell(1).getStringCellValue();
+					var name = row.getCell(2).getStringCellValue();
+					var description = row.getCell(3).getStringCellValue();
+					
+					var pk = new LedgerPk(code, loginUser.getId());
+					entity.setId(pk);
+					entity.setName(name);
+					entity.setDescription(description);
+					entity.setType(Type.valueOf(type));
+				
+					if(ledgerRepo.findById(pk).isPresent()) {
+						isNew = false;
+						continue;
+					}
+					
+					ledgerRepo.saveAndFlush(entity);
+					
+				} catch (Exception e) {
+					message = e.getMessage();
+				} finally {
+					var status = Status.Created;
+					
+					if(isNew && !StringUtils.hasLength(message)) {
+						created ++;
+					} else if(StringUtils.hasLength(message)) {
+						status = Status.Error;
+						error ++;
+					} else if(!isNew) {
+						status = Status.Skipped;
+						skipped ++;
+					}
+					
+					var result = LedgerUploadItem.from(entity, status, message);
+					list.add(result);
+				}
+			}
+			
+			return new LedgerUploadResult(created, skipped, error, list);
+			
+		} catch (EncryptedDocumentException | IOException e) {
+			throw new RuntimeException(e);
+		}
+		
+
 	}
 
 }

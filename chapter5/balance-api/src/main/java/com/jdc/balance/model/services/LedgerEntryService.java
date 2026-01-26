@@ -1,6 +1,5 @@
 package com.jdc.balance.model.services;
 
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.function.Function;
@@ -32,6 +31,8 @@ import com.jdc.balance.model.repo.LedgerEntryRepo;
 import com.jdc.balance.model.repo.LedgerRepo;
 import com.jdc.balance.utils.Nullsafe;
 import com.jdc.balance.utils.exceptions.BusinessException;
+import com.jdc.balance.utils.export.BalanceReportExporter;
+import com.jdc.balance.utils.export.LedgerEntryExporter;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -116,15 +117,26 @@ public class LedgerEntryService {
 	}
 
 	@PreAuthorize("authentication.name eq #ownerName")
-	public OutputStream export(String ownerName, BalanceSearch search) {
-		// TODO Auto-generated method stub
-		return null;
+	public byte[] export(String ownerName, BalanceSearch search) {
+		var list = entryRepo.search(searchQuery(ownerName, search));
+		
+		if(list.isEmpty()) {
+			throw new BusinessException("There is no data to export.");
+		}
+		
+		return BalanceReportExporter.export(list);
 	}
 
 	@PreAuthorize("authentication.name eq #ownerName")
-	public OutputStream export(String ownerName, Type type, EntrySearch search) {
-		// TODO Auto-generated method stub
-		return null;
+	public byte[] export(String ownerName, Type type, EntrySearch search) {
+
+		var list = entryRepo.search(searchQuery(ownerName, type, search));
+		
+		if(list.isEmpty()) {
+			throw new BusinessException("There is no data to export.");
+		}
+		
+		return LedgerEntryExporter.export(list);
 	}
 
 	private void validate(EntryForm form) {
@@ -139,7 +151,21 @@ public class LedgerEntryService {
 	}
 
 	private void calculate(LocalDate issueAt, int entrySeq) {
-		// TODO
+		var recalDate = entrySeq > 1 ? issueAt : issueAt.minusDays(1);
+		var loginUser = loginUserService.getLoginUser();
+		
+		var debitTotal = entryRepo.searchTotal(recalDate, loginUser.getId(), Type.Debit);
+		var creditTotal = entryRepo.searchTotal(recalDate, loginUser.getId(), Type.Credit);
+		var lastBalance = creditTotal - debitTotal;
+		
+		var recalData = entryRepo.searchForCalculate(recalDate, loginUser.getId());
+		
+		for(var entry : recalData) {
+			entry.setLastBalance(lastBalance);
+			var amount = entry.getItems().stream().mapToInt(a -> a.getUnitPrice() * a.getQuantity()).sum();
+			lastBalance = entry.getLedger().getType() == Type.Credit ? lastBalance + amount : lastBalance - amount;
+		}
+		
 	}
 	
 	private Function<CriteriaBuilder, CriteriaQuery<BalanceListItem>> searchQuery(String ownerName, BalanceSearch search) {
@@ -153,8 +179,8 @@ public class LedgerEntryService {
 			cq.select(cb.construct(
 				BalanceListItem.class, 
 				root.get(LedgerEntry_.id),
-				root.get(LedgerEntry_.ledger).get(Ledger_.id).get(LedgerPk_.code),
 				root.get(LedgerEntry_.ledger).get(Ledger_.type),
+				root.get(LedgerEntry_.ledger).get(Ledger_.id).get(LedgerPk_.code),
 				root.get(LedgerEntry_.ledger).get(Ledger_.name),
 				root.get(LedgerEntry_.particular),
 				root.get(LedgerEntry_.lastBalance),
@@ -163,8 +189,8 @@ public class LedgerEntryService {
 			
 			cq.groupBy(
 				root.get(LedgerEntry_.id),
-				root.get(LedgerEntry_.ledger).get(Ledger_.id).get(LedgerPk_.code),
 				root.get(LedgerEntry_.ledger).get(Ledger_.type),
+				root.get(LedgerEntry_.ledger).get(Ledger_.id).get(LedgerPk_.code),
 				root.get(LedgerEntry_.ledger).get(Ledger_.name),
 				root.get(LedgerEntry_.particular),
 				root.get(LedgerEntry_.lastBalance)
@@ -202,8 +228,8 @@ public class LedgerEntryService {
 			cq.select(cb.construct(
 				EntryListItem.class, 
 				root.get(LedgerEntry_.id),
-				root.get(LedgerEntry_.ledger).get(Ledger_.id).get(LedgerPk_.code),
 				root.get(LedgerEntry_.ledger).get(Ledger_.type),
+				root.get(LedgerEntry_.ledger).get(Ledger_.id).get(LedgerPk_.code),
 				root.get(LedgerEntry_.ledger).get(Ledger_.name),
 				root.get(LedgerEntry_.particular),
 				cb.sum(cb.prod(items.get(LedgerEntryItem_.quantity), items.get(LedgerEntryItem_.unitPrice)))
@@ -211,8 +237,8 @@ public class LedgerEntryService {
 			
 			cq.groupBy(
 				root.get(LedgerEntry_.id),
-				root.get(LedgerEntry_.ledger).get(Ledger_.id).get(LedgerPk_.code),
 				root.get(LedgerEntry_.ledger).get(Ledger_.type),
+				root.get(LedgerEntry_.ledger).get(Ledger_.id).get(LedgerPk_.code),
 				root.get(LedgerEntry_.ledger).get(Ledger_.name),
 				root.get(LedgerEntry_.particular)
 			);
