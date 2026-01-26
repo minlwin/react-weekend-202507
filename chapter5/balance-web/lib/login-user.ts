@@ -1,7 +1,7 @@
 import 'server-only'
 
 import { cookies } from "next/headers";
-import { AuthResult, LoginUser } from "./schema/auth.schema";
+import { AuthResult, LoginUser } from "./schema/anonymous/auth.schema";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { redirect } from "next/navigation";
 

@@ -1,14 +1,14 @@
 'use client'
 
-import { LedgerDetails } from "@/lib/schema/member.ledger.schema"
+import { LedgerDetails } from "@/lib/schema/member/ledger.schema"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import * as client from "@/lib/actions/member.ledger.action"
+import * as client from "@/lib/actions/member/ledger.action"
 import { safeCall } from "@/lib/utils"
 import Loading from "@/components/widgets/loading"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import Information from "@/components/widgets/information"
 import InformationCard from "@/components/widgets/information-card"
 import ConfirmDialog from "@/components/widgets/confirm-dialog"

@@ -1,9 +1,9 @@
 'use client'
 
-import { MemberDetails } from "@/lib/schema/admin.member.schema"
+import { MemberDetails } from "@/lib/schema/admin/member.schema"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import * as memberClient from "@/lib/actions/admin.member.action"
+import * as memberClient from "@/lib/actions/admin/member.action"
 import Loading from "@/components/widgets/loading"
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"

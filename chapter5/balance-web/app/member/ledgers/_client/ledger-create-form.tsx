@@ -1,10 +1,10 @@
 'use client'
 
 import PageTitle from "@/components/widgets/page-title"
-import { LedgerCreateFrom, LedgerCreateSchema } from "@/lib/schema/member.ledger.schema"
+import { LedgerCreateFrom, LedgerCreateSchema } from "@/lib/schema/member/ledger.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import * as ledgerClient from "@/lib/actions/member.ledger.action"
+import * as ledgerClient from "@/lib/actions/member/ledger.action"
 import { useRouter } from "next/navigation"
 import FormsSelect from "@/components/fields/forms-select"
 import FormsInput from "@/components/fields/forms-input"

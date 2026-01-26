@@ -3,11 +3,11 @@
 import PagerWidget from "@/components/widgets/pager-widget"
 import MemberSearchResult from "./member-search-result"
 import { useForm } from "react-hook-form"
-import { MemberListItem, MemberSearch } from "@/lib/schema/admin.member.schema"
+import { MemberListItem, MemberSearch } from "@/lib/schema/admin/member.schema"
 import { useEffect, useRef, useState } from "react"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/schema"
 
-import * as memberClient from "@/lib/actions/admin.member.action"
+import * as memberClient from "@/lib/actions/admin/member.action"
 import { safeCall } from "@/lib/utils"
 import FormsSelect from "@/components/fields/forms-select"
 import FormsInput from "@/components/fields/forms-input"

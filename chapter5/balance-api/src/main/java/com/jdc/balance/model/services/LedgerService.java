@@ -1,7 +1,6 @@
 package com.jdc.balance.model.services;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.function.Function;
 
 import org.apache.poi.EncryptedDocumentException;
@@ -18,8 +17,6 @@ import com.jdc.balance.api.member.input.LedgerSearch;
 import com.jdc.balance.api.member.input.LedgerUpdateForm;
 import com.jdc.balance.api.member.output.LedgerDetails;
 import com.jdc.balance.api.member.output.LedgerListItem;
-import com.jdc.balance.api.member.output.LedgerUploadItem;
-import com.jdc.balance.api.member.output.LedgerUploadItem.Status;
 import com.jdc.balance.api.member.output.LedgerUploadResult;
 import com.jdc.balance.model.DataModificationResult;
 import com.jdc.balance.model.PageResult;
@@ -131,8 +128,6 @@ public class LedgerService {
 		var skipped = 0;
 		var error = 0;
 		
-		var list = new ArrayList<LedgerUploadItem>();
-		
 		try(var workbook = WorkbookFactory.create(file.getInputStream())) {
 			
 			var sheet = workbook.getSheetAt(0);
@@ -154,6 +149,7 @@ public class LedgerService {
 					entity.setName(name);
 					entity.setDescription(description);
 					entity.setType(Type.valueOf(type));
+					entity.setOwner(loginUser);
 				
 					if(ledgerRepo.findById(pk).isPresent()) {
 						isNew = false;
@@ -165,30 +161,21 @@ public class LedgerService {
 				} catch (Exception e) {
 					message = e.getMessage();
 				} finally {
-					var status = Status.Created;
-					
 					if(isNew && !StringUtils.hasLength(message)) {
 						created ++;
 					} else if(StringUtils.hasLength(message)) {
-						status = Status.Error;
 						error ++;
 					} else if(!isNew) {
-						status = Status.Skipped;
 						skipped ++;
 					}
-					
-					var result = LedgerUploadItem.from(entity, status, message);
-					list.add(result);
 				}
 			}
 			
-			return new LedgerUploadResult(created, skipped, error, list);
+			return new LedgerUploadResult(created, skipped, error);
 			
 		} catch (EncryptedDocumentException | IOException e) {
 			throw new RuntimeException(e);
 		}
-		
-
 	}
 
 }

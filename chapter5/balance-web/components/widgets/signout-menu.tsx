@@ -1,6 +1,6 @@
 'use client'
 
-import { signOutAction } from "@/lib/actions/auth.action"
+import { signOutAction } from "@/lib/actions/anonymous/auth.action"
 import IconWidget from "./icon-widget"
 
 export default function SignOutMenu() {

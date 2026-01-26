@@ -1,13 +1,13 @@
 "use client"
 
-import { signInAction } from "@/lib/actions/auth.action"
+import { signInAction } from "@/lib/actions/anonymous/auth.action"
 import FormsInput from "@/components/fields/forms-input"
 import { Button } from "@/components/ui/button"
 import { LogIn, UserPlus } from "lucide-react"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { SignInForm, SignInSchema } from "@/lib/schema/auth.schema"
+import { SignInForm, SignInSchema } from "@/lib/schema/anonymous/auth.schema"
 import { safeCall } from "@/lib/utils"
 
 export default function SignInFormComponent() {

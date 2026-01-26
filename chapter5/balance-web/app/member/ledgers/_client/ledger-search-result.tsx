@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import NoData from "@/components/widgets/no-data";
-import { LedgerListItem } from "@/lib/schema/member.ledger.schema";
+import { LedgerListItem } from "@/lib/schema/member/ledger.schema";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 

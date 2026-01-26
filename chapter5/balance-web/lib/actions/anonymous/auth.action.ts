@@ -1,9 +1,9 @@
 "use server"
 
 import { redirect } from "next/navigation";
-import { POST_CONFIG, publicRequest } from "..";
-import { clearAuthResult, setAuthResult } from "../login-user";
-import { AuthResult, SignInForm, SignUpForm } from "../schema/auth.schema";
+import { POST_CONFIG, publicRequest } from "../..";
+import { clearAuthResult, setAuthResult } from "../../login-user";
+import { AuthResult, SignInForm, SignUpForm } from "../../schema/anonymous/auth.schema";
 
 export async function signInAction(form:SignInForm) {
 

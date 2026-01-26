@@ -1,9 +1,17 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { MemberListItem } from "@/lib/schema/admin.member.schema";
+import NoData from "@/components/widgets/no-data";
+import { MemberListItem } from "@/lib/schema/admin/member.schema";
 import { ArrowRight, UserCheck, UserMinus } from "lucide-react";
 import Link from "next/link";
 
 export default function MemberSearchResult({list} : {list : MemberListItem[]}) {
+
+    if(list.length == 0) {
+        return (
+            <NoData name="Member" />
+        )
+    }
+
     return (
         <Table>
             <TableHeader>

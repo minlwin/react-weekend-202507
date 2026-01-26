@@ -1,10 +1,10 @@
 'use client'
 
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/schema"
-import { LedgerListItem, LedgerSearch } from "@/lib/schema/member.ledger.schema"
-import { useEffect, useRef, useState } from "react"
+import { LedgerListItem, LedgerSearch, LedgerUploadResult } from "@/lib/schema/member/ledger.schema"
+import React, { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
-import * as ledgerClient from "@/lib/actions/member.ledger.action"
+import * as ledgerClient from "@/lib/actions/member/ledger.action"
 import LedgerSearchResult from "./ledger-search-result"
 import PagerWidget from "@/components/widgets/pager-widget"
 import FormsSelect from "@/components/fields/forms-select"
@@ -12,6 +12,8 @@ import FormsInput from "@/components/fields/forms-input"
 import { Button } from "@/components/ui/button"
 import { File, Plus, Search } from "lucide-react"
 import Link from "next/link"
+import { safeCall } from "@/lib/utils"
+import UploadResultDialog from "./upload-result-dialog"
 
 export default function LedgerSearchComponent() {
 
@@ -35,8 +37,10 @@ export default function LedgerSearchComponent() {
     }, [form.handleSubmit])
 
     async function onSubmit(form : LedgerSearch) {
-        const response = await ledgerClient.search(form)
-        setResult(response)
+        await safeCall(async () => {
+            const response = await ledgerClient.search(form)
+            setResult(response)
+        })
     }
 
     async function onPageChange(page : number) {
@@ -50,9 +54,10 @@ export default function LedgerSearchComponent() {
         form.handleSubmit(onSubmit)()
     }
 
-    const uploadFormRef = useRef<HTMLFormElement>(null)
     const uploadInputRef = useRef<HTMLInputElement>(null)
     const uploadInput = uploadInputRef.current
+
+    const [uploadResult, setUploadResult] = useState<LedgerUploadResult>()
 
     useEffect(() => {
         if(uploadInput) {
@@ -64,6 +69,22 @@ export default function LedgerSearchComponent() {
 
     function onClickUpload() {
         uploadInputRef.current?.click()
+    }
+
+    async function onFileChange(event : React.ChangeEvent<HTMLInputElement>) {
+        
+        await safeCall(async () => {
+            const file = event.target.files?.[0]
+            if(!file) {
+                return
+            }
+
+            const formData = new FormData
+            formData.append("file", file)
+
+            const response = await ledgerClient.upload(formData)
+            setUploadResult(response)
+        })
     }
 
     return (
@@ -100,10 +121,16 @@ export default function LedgerSearchComponent() {
             <PagerWidget info={pager}
                 onPageChange={onPageChange} onSizeChange={onSizeChange} />
 
-            <form ref={uploadFormRef} className="hidden">
-                <input ref={uploadInputRef} type="file" />
+            <form className="hidden">
+                <input ref={uploadInputRef} onChange={onFileChange} type="file" />
             </form>
-
+            
+            <UploadResultDialog result={uploadResult} onClose={() => {
+                setUploadResult(undefined)
+                if(uploadInputRef.current) {
+                    uploadInputRef.current.value = ''
+                }
+            }} />
         </section>
     )
 }

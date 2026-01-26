@@ -1,5 +1,5 @@
 import z from "zod"
-import { PageSearch } from "."
+import { PageSearch } from ".."
 
 export type LedgerType = "Debit" | "Credit"
 
@@ -39,3 +39,9 @@ export const LedgerEditSchema = z.object({
 })
 
 export type LedgerEditForm = z.infer<typeof LedgerEditSchema>
+
+export type LedgerUploadResult = {
+    created : number
+    skipped : number
+    error : number
+}

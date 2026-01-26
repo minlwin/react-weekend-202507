@@ -1,5 +1,5 @@
 import z from "zod"
-import { PageSearch } from "."
+import { PageSearch } from ".."
 
 export type MemberSearch = {
     disabled? : string

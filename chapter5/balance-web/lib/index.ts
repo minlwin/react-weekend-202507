@@ -1,8 +1,8 @@
 import 'server-only'
 
 import { redirect } from "next/navigation"
-import { getAccessToken, getRefreshToken, setAuthResult } from "./login-user"
-import { AuthResult } from "./schema/auth.schema"
+import { clearAuthResult, getAccessToken, getRefreshToken, setAuthResult } from "./login-user"
+import { AuthResult } from "./schema/anonymous/auth.schema"
 
 export async function publicRequest(path:string, options : RequestInit = {}, search? : {[key:string] : any}) {
     const response = await fetch(url(path, search), options)
@@ -32,6 +32,7 @@ export async function secureRequest(path:string, options : RequestInit = {}, sea
     const accessToken = await getAccessToken()
 
     if(!accessToken) {
+        await clearAuthResult()
         redirect("/signin")  
     }
 
@@ -41,6 +42,7 @@ export async function secureRequest(path:string, options : RequestInit = {}, sea
         const refreshToken = await getRefreshToken()
 
         if(!refreshToken) {
+            await clearAuthResult()
             redirect("/signin")        
         }
 
@@ -52,6 +54,7 @@ export async function secureRequest(path:string, options : RequestInit = {}, sea
         })
 
         if(!refreshResponse.ok) {
+            await clearAuthResult()
             redirect("/signin")
         }
 
@@ -61,12 +64,14 @@ export async function secureRequest(path:string, options : RequestInit = {}, sea
         response = await fetchWithToken(authResult.accessToken)
     }    
 
-    if(!response || response.status === 401) {
+    if(!response 
+        || response.status === 403 
+        || response.status === 401) {
+            await clearAuthResult()
         redirect("/signin")        
     }
 
     if(response.status === 400 
-        || response.status === 403 
         || response.status === 500) {
         const message = await response.json()
         throw JSON.stringify(message)

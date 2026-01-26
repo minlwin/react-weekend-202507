@@ -1,7 +1,7 @@
 "use client"
 
-import { signUpAction } from "@/lib/actions/auth.action"
-import { SignUpForm, SignUpSchema } from "@/lib/schema/auth.schema"
+import { signUpAction } from "@/lib/actions/anonymous/auth.action"
+import { SignUpForm, SignUpSchema } from "@/lib/schema/anonymous/auth.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import FormsInput from "@/components/fields/forms-input"

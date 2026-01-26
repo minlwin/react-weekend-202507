@@ -1,12 +1,12 @@
 'use client'
 
 import PageTitle from "@/components/widgets/page-title"
-import { LedgerDetails, LedgerEditForm, LedgerEditSchema } from "@/lib/schema/member.ledger.schema"
+import { LedgerDetails, LedgerEditForm, LedgerEditSchema } from "@/lib/schema/member/ledger.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import * as client from "@/lib/actions/member.ledger.action"
+import * as client from "@/lib/actions/member/ledger.action"
 import Loading from "@/components/widgets/loading"
 import { safeCall } from "@/lib/utils"
 import FormsInput from "@/components/fields/forms-input"
