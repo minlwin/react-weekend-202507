@@ -123,7 +123,7 @@ function EntrySearchResult({list} : {list : EntryListItem[]}) {
                     <TableCell>{item.id.code}</TableCell>
                     <TableCell>{`${item.ledgerCode} - ${item.ledgerName}`}</TableCell>
                     <TableCell>{item.particular}</TableCell>
-                    <TableCell className="text-end">{item.amount}</TableCell>
+                    <TableCell className="text-end">{item.amount.toLocaleString()} MMK</TableCell>
                     <TableCell className="flex justify-center">
                         <Link href={`/member/balances/${item.id.code}`}>
                             <ArrowRight className="size-4" />

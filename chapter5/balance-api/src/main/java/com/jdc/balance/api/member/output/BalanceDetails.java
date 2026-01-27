@@ -15,7 +15,8 @@ public record BalanceDetails(
 		LocalDate issueDate,
 		String particular,
 		int lastBalance,
-		List<BalanceDetailsItem> items) {
+		List<BalanceDetailsItem> items,
+		boolean editable) {
 
 	public int getCount() {
 		return items.stream().mapToInt(a -> a.quantity()).sum();
@@ -25,7 +26,7 @@ public record BalanceDetails(
 		return items.stream().mapToInt(a -> a.getTotal()).sum();
 	}
 	
-	public static BalanceDetails from(LedgerEntry entity) {
+	public static BalanceDetails from(LedgerEntry entity, LocalDate cutOffDate) {
 		return new BalanceDetails(
 				entity.getId(), 
 				entity.getLedger().getId().code(), 
@@ -34,6 +35,7 @@ public record BalanceDetails(
 				entity.getId().issueAt(), 
 				entity.getParticular(), 
 				entity.getItems().stream().mapToInt(a -> a.getQuantity() * a.getUnitPrice()).sum(), 
-				entity.getItems().stream().map(BalanceDetailsItem::from).toList());
+				entity.getItems().stream().map(BalanceDetailsItem::from).toList(), 
+				entity.getId().issueAt().isBefore(cutOffDate));
 	}
 }

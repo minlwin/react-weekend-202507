@@ -1,11 +1,10 @@
 package com.jdc.balance.model.services;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +27,7 @@ import com.jdc.balance.model.entity.pk.LedgerPk_;
 import com.jdc.balance.model.repo.LedgerEntryRepo;
 import com.jdc.balance.model.repo.LedgerRepo;
 import com.jdc.balance.utils.Nullsafe;
-import com.jdc.balance.utils.dto.DataModificationResult;
+import com.jdc.balance.utils.dto.CalculationRequiredEvent;
 import com.jdc.balance.utils.dto.PageResult;
 import com.jdc.balance.utils.exceptions.BusinessException;
 import com.jdc.balance.utils.export.BalanceReportExporter;
@@ -50,14 +49,43 @@ public class LedgerEntryService {
 	@Autowired
 	private LedgerEntryRepo entryRepo;
 	
-	@Value("${app.entry.cut-off-date}")
-	private int cutOffDate;
-
+	@Autowired
+	private CutoffDateManager cutoffDateManager;
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
 
 	@Transactional
 	@PreAuthorize("authentication.name eq #ownerName")
-	public DataModificationResult<LedgerEntryPk> create(String ownerName, EntryForm form) {
+	public LedgerEntryPk create(String ownerName, EntryForm form) {
+		var id = createInternal(ownerName, form);
+		eventPublisher.publishEvent(new CalculationRequiredEvent(id.accountId()));
+		return id;
+	}
+
+	@Transactional
+	@PreAuthorize("authentication.name eq #ownerName")
+	public LedgerEntryPk update(String ownerName, String code, EntryForm form) {
 		
+		validate(form);
+		
+		var loginUser = loginUserService.getLoginUser();
+		var id = LedgerEntryPk.from(loginUser.getId(), code);
+		
+		if(isExeedCutOff(id.issueAt())) {
+			throw new BusinessException("You can't cahnge fixed entry.");
+		}
+		
+		entryRepo.deleteById(id);
+		
+		var newId = createInternal(ownerName, form);
+		
+		eventPublisher.publishEvent(new CalculationRequiredEvent(newId.accountId()));
+		
+		return newId;
+		
+	}
+	
+	private LedgerEntryPk createInternal(String ownerName, EntryForm form) {
 		validate(form);
 		
 		var loginUser = loginUserService.getLoginUser();
@@ -75,35 +103,15 @@ public class LedgerEntryService {
 		
 		entity = entryRepo.save(entity);
 		
-		calculate(entity.getId().issueAt(), entity.getId().entrySeq());
-		
-		return new DataModificationResult<>(entity.getId());
+		return entity.getId();
 	}
-
-	@Transactional
-	@PreAuthorize("authentication.name eq #ownerName")
-	public DataModificationResult<LedgerEntryPk> update(String ownerName, String code, EntryForm form) {
-		
-		validate(form);
-		
-		var loginUser = loginUserService.getLoginUser();
-		var id = LedgerEntryPk.from(loginUser.getId(), code);
-		
-		if(isExeedCutOff(id.issueAt())) {
-			throw new BusinessException("You can't cahnge fixed entry.");
-		}
-		
-		entryRepo.deleteById(id);
-		calculate(id.issueAt(), id.entrySeq());
-		
-		return create(ownerName, form);
-	}
+	
 
 	@PreAuthorize("authentication.name eq #ownerName")
 	public BalanceDetails findById(String ownerName, String code) {
 		var loginUser = loginUserService.getLoginUser();
 		var id = LedgerEntryPk.from(loginUser.getId(), code);
-		return Nullsafe.call(entryRepo.findById(id).map(BalanceDetails::from), "Ledger Entry", code);
+		return Nullsafe.call(entryRepo.findById(id).map(entity -> BalanceDetails.from(entity, cutoffDateManager.getCuttoffDate())), "Ledger Entry", code);
 	}
 
 	@PreAuthorize("authentication.name eq #ownerName")
@@ -146,26 +154,8 @@ public class LedgerEntryService {
 	}
 	
 	private boolean isExeedCutOff(LocalDate date) {
-		var cutOff = YearMonth.now().atDay(cutOffDate);
-		return cutOff.compareTo(date) >= 0;
-	}
-
-	private void calculate(LocalDate issueAt, int entrySeq) {
-		var recalDate = entrySeq > 1 ? issueAt : issueAt.minusDays(1);
-		var loginUser = loginUserService.getLoginUser();
-		
-		var debitTotal = entryRepo.searchTotal(recalDate, loginUser.getId(), Type.Debit);
-		var creditTotal = entryRepo.searchTotal(recalDate, loginUser.getId(), Type.Credit);
-		var lastBalance = creditTotal.orElse(0) - debitTotal.orElse(0);
-		
-		var recalData = entryRepo.searchForCalculate(recalDate, loginUser.getId());
-		
-		for(var entry : recalData) {
-			entry.setLastBalance(lastBalance);
-			var amount = entry.getItems().stream().mapToInt(a -> a.getUnitPrice() * a.getQuantity()).sum();
-			lastBalance = entry.getLedger().getType() == Type.Credit ? lastBalance + amount : lastBalance - amount;
-		}
-		
+		var cutOff = cutoffDateManager.getCuttoffDate();
+		return date.compareTo(cutOff) >= 0;
 	}
 	
 	private Function<CriteriaBuilder, CriteriaQuery<BalanceListItem>> searchQuery(String ownerName, BalanceSearch search) {
@@ -262,5 +252,6 @@ public class LedgerEntryService {
 			
 			return cq;
 		};
-	}
+	}	
+	
 }

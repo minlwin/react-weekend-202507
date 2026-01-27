@@ -26,6 +26,7 @@ export type BalanceDetails = {
     items : BalanceDetailsItem[]
     count : number
     amount : number
+    editable: boolean
 }
 
 export type BalanceDetailsItem = {

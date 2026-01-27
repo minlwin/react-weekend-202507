@@ -49,11 +49,11 @@ public class LedgerEntryApi {
 
 	@PostMapping
 	DataModificationResult<LedgerEntryPk> create(@Validated @RequestBody EntryForm form, Authentication authentication) {
-		return service.create(authentication.getName(), form);
+		return new DataModificationResult<LedgerEntryPk>(service.create(authentication.getName(), form));
 	}
 	
-	@PutMapping("{id}")
-	DataModificationResult<LedgerEntryPk> update(@PathVariable String id, @Validated @RequestBody EntryForm form, Authentication authentication) {
-		return service.update(authentication.getName(), id, form);
+	@PutMapping("{code}")
+	DataModificationResult<LedgerEntryPk> update(@PathVariable String code, @Validated @RequestBody EntryForm form, Authentication authentication) {
+		return new DataModificationResult<LedgerEntryPk>(service.update(authentication.getName(), code, form));
 	}
 }

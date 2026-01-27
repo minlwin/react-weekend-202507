@@ -60,7 +60,7 @@ export default function BalanceSearchComponent () {
     }
 
     async function onPageChange(page : number) {
-        form.setValue("page", 0)
+        form.setValue("page", page)
         form.handleSubmit(onSearch)()
     }
 
@@ -113,11 +113,11 @@ function BalanceSearchResult({list} : {list? : BalanceListItem[]}) {
                         <TableCell>{item.idCode}</TableCell>
                         <TableCell>{item.ledger}</TableCell>
                         <TableCell>{item.particular}</TableCell>
-                        <TableCell className="text-end">{item.debit}</TableCell>
-                        <TableCell className="text-end">{item.credit}</TableCell>
-                        <TableCell className="text-end">{item.balance}</TableCell>
+                        <TableCell className="text-end">{item.debit.toLocaleString()} MMK</TableCell>
+                        <TableCell className="text-end">{item.credit.toLocaleString()} MMK</TableCell>
+                        <TableCell className="text-end">{item.balance.toLocaleString()} MMK</TableCell>
                         <TableCell className="flex justify-center">
-                            <Link href={`/member/balance/${item.idCode}`}>
+                            <Link href={`/member/balances/${item.idCode}`}>
                                 <ArrowRight className="size-4" />
                             </Link>
                         </TableCell>

@@ -4,8 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jdc.balance.model.BaseRepository;
 import com.jdc.balance.model.entity.Ledger.Type;
@@ -35,4 +38,14 @@ public interface LedgerEntryRepo extends BaseRepository<LedgerEntry, LedgerEntry
 			@Param("calcDate") LocalDate calcDate, 
 			@Param("accountId") int accountId, 
 			@Param("type") Type type);
+	
+	@Query("""
+			delete from LedgerEntry le where 
+			le.id.accountId = :accountId and 
+			le.id.issueAt = :issueAt and 
+			le.id.entrySeq = :entrySeq
+			""")
+	@Modifying(flushAutomatically = true, clearAutomatically = true)
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	int deleteForUpdate(@Param("accountId") int accountId, @Param("issueAt") LocalDate issueAt, @Param("entrySeq") int entrySeq);
 }

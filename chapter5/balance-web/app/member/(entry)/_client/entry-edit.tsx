@@ -12,7 +12,7 @@ import * as ledgerClient from "@/lib/actions/member/ledger.action"
 import * as entryClient from "@/lib/actions/member/entry.action"
 import * as balanceClient from "@/lib/actions/member/balance.action"
 import FormsSelect, { Option } from "@/components/fields/forms-select"
-import { FormInput, Plus, Save, Trash } from "lucide-react"
+import { Plus, Save, Trash } from "lucide-react"
 import FormsInput from "@/components/fields/forms-input"
 import FormsTextarea from "@/components/fields/forms-textarea"
 import { Button } from "@/components/ui/button"
@@ -63,8 +63,8 @@ export default function EntryEditComponent({type} : {type : LedgerType}) {
 
     async function onSave(form : EntryForm) {
         await safeCall(async () => {
-            const response = await entryClient.create(form)
-            router.push(`/member/balance/${response.id.code}`)
+            const response = await (id ? entryClient.update(id, form) : entryClient.create(form))
+            router.push(`/member/balances/${response.id.code}`)
         })
     }
 
@@ -106,8 +106,10 @@ export default function EntryEditComponent({type} : {type : LedgerType}) {
         } 
     }
 
+    const items = form.watch("items")
+
     function getTotal(index : number) {
-        const item = form.watch("items")[index]
+        const item = items[index]
         if(item && !Number.isNaN(item.unitPrice) && !Number.isNaN(item.quantity)) {
             return Number.parseInt(item.unitPrice) * Number.parseInt(item.quantity) || 0
         }
@@ -115,9 +117,9 @@ export default function EntryEditComponent({type} : {type : LedgerType}) {
     }
 
     function getAllTotal() {
-        return form.watch("items").map(a => {
+        return items.map(a => {
             if(!Number.isNaN(a.quantity) && !Number.isNaN(a.unitPrice)) {
-                return Number.parseInt(a.unitPrice) * Number.parseInt(a.quantity)
+                return Number.parseInt(a.unitPrice) * Number.parseInt(a.quantity) || 0
             }
             return 0;
         }).reduce((a, b) => a + b)
