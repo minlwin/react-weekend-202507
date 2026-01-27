@@ -3,7 +3,7 @@ import React from "react";
 
 export const metadata: Metadata = {
   title: "BALANCE | Credit",
-  description: "Member Management page of Balance Application.",
+  description: "Credit Management page of Balance Application.",
 };
 
 export default function Layout({children} : {children : React.ReactNode}) {

@@ -15,7 +15,7 @@ type PagerProps = {
 
 export default function PagerWidget({info, onPageChange, onSizeChange} : PagerProps) {
 
-    if(info) {
+    if(info && info.count > 0) {
         return (
             <nav className="flex justify-between w-full">
                 <div className="flex gap-6">
@@ -35,7 +35,7 @@ export default function PagerWidget({info, onPageChange, onSizeChange} : PagerPr
                             <ArrowLeft />
                         </Button>
                         {info.links.map(a => 
-                            <Button variant={a == info.page ? "default" : "outline"} onClick={() => onPageChange(a)}>
+                            <Button key={a} variant={a == info.page ? "default" : "outline"} onClick={() => onPageChange(a)}>
                                 {a + 1}
                             </Button>
                         )}

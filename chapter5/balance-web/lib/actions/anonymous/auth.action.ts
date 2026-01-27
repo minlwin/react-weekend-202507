@@ -40,5 +40,5 @@ export async function signUpAction(form : SignUpForm) {
 
 export async function signOutAction() {
     await clearAuthResult()
-    redirect("/")
+    redirect("/signin")
 }

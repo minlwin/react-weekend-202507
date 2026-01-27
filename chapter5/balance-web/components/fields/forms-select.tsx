@@ -2,7 +2,7 @@ import { Control, Controller, FieldValues, Path } from "react-hook-form"
 import { NativeSelect, NativeSelectOption } from "../ui/native-select"
 import { Field, FieldError, FieldLabel } from "../ui/field"
 
-type Option = {
+export type Option = {
     key: string
     value: string
 }

@@ -2,6 +2,7 @@ package com.jdc.balance.model.repo;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,7 +31,7 @@ public interface LedgerEntryRepo extends BaseRepository<LedgerEntry, LedgerEntry
 			and lg.ledger.type = :type 
 			and lg.id.issueAt < :calcDate
 			""")
-	Integer searchTotal(
+	Optional<Integer> searchTotal(
 			@Param("calcDate") LocalDate calcDate, 
 			@Param("accountId") int accountId, 
 			@Param("type") Type type);

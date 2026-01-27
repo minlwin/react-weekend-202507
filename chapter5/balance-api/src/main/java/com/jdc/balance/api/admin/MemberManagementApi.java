@@ -14,9 +14,9 @@ import com.jdc.balance.api.admin.input.MemberSearch;
 import com.jdc.balance.api.admin.input.MemberStatusForm;
 import com.jdc.balance.api.admin.output.MemberDetails;
 import com.jdc.balance.api.admin.output.MemberListItem;
-import com.jdc.balance.model.DataModificationResult;
-import com.jdc.balance.model.PageResult;
 import com.jdc.balance.model.services.AccountService;
+import com.jdc.balance.utils.dto.DataModificationResult;
+import com.jdc.balance.utils.dto.PageResult;
 
 @RestController
 @RequestMapping("admin/members")

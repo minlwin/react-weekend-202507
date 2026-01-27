@@ -3,6 +3,7 @@ import 'server-only'
 import { redirect } from "next/navigation"
 import { clearAuthResult, getAccessToken, getRefreshToken, setAuthResult } from "./login-user"
 import { AuthResult } from "./schema/anonymous/auth.schema"
+import { ApplicationError } from './schema'
 
 export async function publicRequest(path:string, options : RequestInit = {}, search? : {[key:string] : any}) {
     const response = await fetch(url(path, search), options)
@@ -33,7 +34,11 @@ export async function secureRequest(path:string, options : RequestInit = {}, sea
 
     if(!accessToken) {
         await clearAuthResult()
-        redirect("/signin")  
+        const error:ApplicationError = {
+            logout : true,
+            message : ["No Access Token"]
+        }
+        throw JSON.stringify(error)
     }
 
     response = await fetchWithToken(accessToken)
@@ -43,7 +48,11 @@ export async function secureRequest(path:string, options : RequestInit = {}, sea
 
         if(!refreshToken) {
             await clearAuthResult()
-            redirect("/signin")        
+            const error:ApplicationError = {
+                logout : true,
+                message : await response.json()
+            }
+            throw JSON.stringify(error)
         }
 
         const refreshResponse = await publicRequest("/auth/refresh", {
@@ -55,7 +64,11 @@ export async function secureRequest(path:string, options : RequestInit = {}, sea
 
         if(!refreshResponse.ok) {
             await clearAuthResult()
-            redirect("/signin")
+            const error:ApplicationError = {
+                logout : true,
+                message : await response.json()
+            }
+            throw JSON.stringify(error)
         }
 
         const authResult = await refreshResponse.json() as AuthResult
@@ -68,13 +81,22 @@ export async function secureRequest(path:string, options : RequestInit = {}, sea
         || response.status === 403 
         || response.status === 401) {
             await clearAuthResult()
-        redirect("/signin")        
+        const error:ApplicationError = {
+            logout : true,
+            message : await response.json()
+        }
+        throw JSON.stringify(error)
     }
 
     if(response.status === 400 
-        || response.status === 500) {
-        const message = await response.json()
-        throw JSON.stringify(message)
+            || response.status === 500) {
+        
+        const error:ApplicationError = {
+            logout : false,
+            message : await response.json()
+        }
+
+        throw JSON.stringify(error)
     }
 
     return response

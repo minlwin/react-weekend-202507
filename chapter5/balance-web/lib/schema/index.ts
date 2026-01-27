@@ -27,3 +27,8 @@ export const DEFAULT_PAGE_RESULT:PageResult<any> = {
     totalPages: 0,
     links: []
 }
+
+export type ApplicationError = {
+    logout: boolean
+    message: string []
+}

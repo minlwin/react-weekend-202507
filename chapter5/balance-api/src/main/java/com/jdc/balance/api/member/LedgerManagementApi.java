@@ -19,10 +19,10 @@ import com.jdc.balance.api.member.input.LedgerUpdateForm;
 import com.jdc.balance.api.member.output.LedgerDetails;
 import com.jdc.balance.api.member.output.LedgerListItem;
 import com.jdc.balance.api.member.output.LedgerUploadResult;
-import com.jdc.balance.model.DataModificationResult;
-import com.jdc.balance.model.PageResult;
 import com.jdc.balance.model.services.LedgerService;
+import com.jdc.balance.utils.dto.DataModificationResult;
 import com.jdc.balance.utils.dto.DeleteStatusForm;
+import com.jdc.balance.utils.dto.PageResult;
 
 @RestController
 @RequestMapping("member/ledgers")

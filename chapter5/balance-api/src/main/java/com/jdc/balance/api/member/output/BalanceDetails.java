@@ -26,6 +26,14 @@ public record BalanceDetails(
 	}
 	
 	public static BalanceDetails from(LedgerEntry entity) {
-		return null;
+		return new BalanceDetails(
+				entity.getId(), 
+				entity.getLedger().getId().code(), 
+				entity.getLedger().getType(), 
+				entity.getLedger().getName(), 
+				entity.getId().issueAt(), 
+				entity.getParticular(), 
+				entity.getItems().stream().mapToInt(a -> a.getQuantity() * a.getUnitPrice()).sum(), 
+				entity.getItems().stream().map(BalanceDetailsItem::from).toList());
 	}
 }

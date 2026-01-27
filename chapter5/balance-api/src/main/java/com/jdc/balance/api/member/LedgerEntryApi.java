@@ -1,8 +1,6 @@
 package com.jdc.balance.api.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -18,11 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jdc.balance.api.member.input.EntryForm;
 import com.jdc.balance.api.member.input.EntrySearch;
 import com.jdc.balance.api.member.output.EntryListItem;
-import com.jdc.balance.model.DataModificationResult;
-import com.jdc.balance.model.PageResult;
 import com.jdc.balance.model.entity.Ledger.Type;
 import com.jdc.balance.model.entity.pk.LedgerEntryPk;
 import com.jdc.balance.model.services.LedgerEntryService;
+import com.jdc.balance.utils.ResponseUtils;
+import com.jdc.balance.utils.dto.DataModificationResult;
+import com.jdc.balance.utils.dto.PageResult;
 
 @RestController
 @RequestMapping("member/entries")
@@ -44,13 +43,8 @@ public class LedgerEntryApi {
 	@GetMapping("{type}/export")
 	ResponseEntity<byte[]> export(
 			@PathVariable Type type, EntrySearch search, Authentication authentication) {
-		
 		var exportData = service.export(authentication.getName(), type, search);
-		
-		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=ledger-entry.xlsx")
-				.contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-				.body(exportData);
+		return ResponseUtils.ok(exportData);
 	}
 
 	@PostMapping

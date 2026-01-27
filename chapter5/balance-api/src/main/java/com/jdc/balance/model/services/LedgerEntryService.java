@@ -16,8 +16,6 @@ import com.jdc.balance.api.member.input.EntrySearch;
 import com.jdc.balance.api.member.output.BalanceDetails;
 import com.jdc.balance.api.member.output.BalanceListItem;
 import com.jdc.balance.api.member.output.EntryListItem;
-import com.jdc.balance.model.DataModificationResult;
-import com.jdc.balance.model.PageResult;
 import com.jdc.balance.model.entity.Ledger.Type;
 import com.jdc.balance.model.entity.LedgerEntry;
 import com.jdc.balance.model.entity.LedgerEntryItem_;
@@ -30,6 +28,8 @@ import com.jdc.balance.model.entity.pk.LedgerPk_;
 import com.jdc.balance.model.repo.LedgerEntryRepo;
 import com.jdc.balance.model.repo.LedgerRepo;
 import com.jdc.balance.utils.Nullsafe;
+import com.jdc.balance.utils.dto.DataModificationResult;
+import com.jdc.balance.utils.dto.PageResult;
 import com.jdc.balance.utils.exceptions.BusinessException;
 import com.jdc.balance.utils.export.BalanceReportExporter;
 import com.jdc.balance.utils.export.LedgerEntryExporter;
@@ -156,7 +156,7 @@ public class LedgerEntryService {
 		
 		var debitTotal = entryRepo.searchTotal(recalDate, loginUser.getId(), Type.Debit);
 		var creditTotal = entryRepo.searchTotal(recalDate, loginUser.getId(), Type.Credit);
-		var lastBalance = creditTotal - debitTotal;
+		var lastBalance = creditTotal.orElse(0) - debitTotal.orElse(0);
 		
 		var recalData = entryRepo.searchForCalculate(recalDate, loginUser.getId());
 		

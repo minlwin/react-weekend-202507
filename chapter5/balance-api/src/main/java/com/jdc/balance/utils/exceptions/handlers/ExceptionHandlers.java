@@ -61,6 +61,7 @@ public class ExceptionHandlers {
 	@ExceptionHandler
 	@ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
 	List<String> handle(Throwable e) {
+		e.printStackTrace();
 		return List.of(e.getMessage());
 	}
 	

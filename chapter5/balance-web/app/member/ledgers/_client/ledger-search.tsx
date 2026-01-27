@@ -5,15 +5,16 @@ import { LedgerListItem, LedgerSearch, LedgerUploadResult } from "@/lib/schema/m
 import React, { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as ledgerClient from "@/lib/actions/member/ledger.action"
-import LedgerSearchResult from "./ledger-search-result"
 import PagerWidget from "@/components/widgets/pager-widget"
 import FormsSelect from "@/components/fields/forms-select"
 import FormsInput from "@/components/fields/forms-input"
 import { Button } from "@/components/ui/button"
-import { File, Plus, Search } from "lucide-react"
+import { ArrowRight, File, Plus, Search } from "lucide-react"
 import Link from "next/link"
 import { safeCall } from "@/lib/utils"
 import UploadResultDialog from "./upload-result-dialog"
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
+import NoData from "@/components/widgets/no-data"
 
 export default function LedgerSearchComponent() {
 
@@ -132,5 +133,47 @@ export default function LedgerSearchComponent() {
                 }
             }} />
         </section>
+    )
+}
+
+function LedgerSearchResult({list} : {list : LedgerListItem[]}) {
+    
+    if(list.length == 0) {
+        return (
+            <NoData name="Ledger" />
+        )
+    }
+    
+    return (
+        <Table>
+            <TableHeader>
+                <TableRow>
+                    <TableHead>Code</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Created At</TableHead>
+                    <TableHead>Modified At</TableHead>
+                    <TableHead></TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {list.map((item, index) => 
+                    <TableRow key={index}>
+                        <TableCell>{item.code}</TableCell>
+                        <TableCell>{item.name}</TableCell>
+                        <TableCell>{item.description}</TableCell>
+                        <TableCell>{item.deleted ? "Deleted" : "Active"}</TableCell>
+                        <TableCell>{item.createdAt}</TableCell>
+                        <TableCell>{item.modifiedAt}</TableCell>
+                        <TableCell className="text-center">
+                            <Link href={`/member/ledgers/${item.code}`}>
+                                <ArrowRight className="size-4" />
+                            </Link>
+                        </TableCell>
+                    </TableRow>
+                )}
+            </TableBody>
+        </Table>
     )
 }

@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jdc.balance.api.member.input.BalanceSearch;
 import com.jdc.balance.api.member.output.BalanceDetails;
 import com.jdc.balance.api.member.output.BalanceListItem;
-import com.jdc.balance.model.PageResult;
 import com.jdc.balance.model.services.LedgerEntryService;
+import com.jdc.balance.utils.ResponseUtils;
+import com.jdc.balance.utils.dto.PageResult;
 
 @RestController
 @RequestMapping("member/balance")
@@ -32,7 +33,8 @@ public class BalanceReportApi {
 	
 	@GetMapping("export")
 	ResponseEntity<byte[]> export(BalanceSearch search, Authentication authentication) {
-		return null;
+		var exportData = service.export(authentication.getName(), search);
+		return ResponseUtils.ok(exportData);
 	}
 
 	@GetMapping("{id}")

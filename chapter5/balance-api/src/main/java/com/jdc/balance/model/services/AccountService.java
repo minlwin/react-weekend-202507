@@ -14,12 +14,12 @@ import com.jdc.balance.api.admin.input.MemberStatusForm;
 import com.jdc.balance.api.admin.output.MemberDetails;
 import com.jdc.balance.api.admin.output.MemberListItem;
 import com.jdc.balance.api.anonymous.input.SignUpForm;
-import com.jdc.balance.model.DataModificationResult;
-import com.jdc.balance.model.PageResult;
 import com.jdc.balance.model.entity.Account;
 import com.jdc.balance.model.entity.Account_;
 import com.jdc.balance.model.repo.AccountRepo;
 import com.jdc.balance.utils.Nullsafe;
+import com.jdc.balance.utils.dto.DataModificationResult;
+import com.jdc.balance.utils.dto.PageResult;
 import com.jdc.balance.utils.exceptions.BusinessException;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
