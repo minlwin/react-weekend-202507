@@ -21,4 +21,6 @@ public interface BaseRepository<T, ID> extends JpaRepository<T, ID> {
 			Function<CriteriaBuilder, CriteriaQuery<Long>> countFunc, 
 			int page, int size
 	);
+	
+	Long searchCount(Function<CriteriaBuilder, CriteriaQuery<Long>> countFunc);
 }

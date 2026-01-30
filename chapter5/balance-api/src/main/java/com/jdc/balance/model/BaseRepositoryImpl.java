@@ -41,4 +41,10 @@ public class BaseRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> implem
 		return new PageResult<R>(query.getResultList(), count, page, size);
 	}
 
+	@Override
+	public Long searchCount(Function<CriteriaBuilder, CriteriaQuery<Long>> countFunc) {
+		return em.createQuery(countFunc.apply(em.getCriteriaBuilder()))
+				.getSingleResult();
+	}
+
 }

@@ -1,4 +1,6 @@
+import PageTitle from "@/components/widgets/page-title";
 import { Metadata } from "next";
+import AdminDashboardComponent from "./_client/admin-dashboard";
 
 export const metadata: Metadata = {
   title: "ADMIN | Home",
@@ -7,6 +9,10 @@ export const metadata: Metadata = {
 
 export default function AdminPage() {
     return (
-        <>Admin</>
+        <section className="space-y-6">
+            <PageTitle title="Dashboard" icon="LayoutDashboard" />
+
+            <AdminDashboardComponent />
+        </section>
     )
 }

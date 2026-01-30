@@ -1,7 +1,7 @@
 'use client'
 
 import { Pager } from "@/lib/schema"
-import { NativeSelect, NativeSelectOptGroup, NativeSelectOption } from "../ui/native-select"
+import { NativeSelect, NativeSelectOption } from "../ui/native-select"
 import { Input } from "../ui/input"
 import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"
@@ -21,12 +21,10 @@ export default function PagerWidget({info, onPageChange, onSizeChange} : PagerPr
                 <div className="flex gap-6">
                     <div className="flex items-center gap-2">
                         <div>Page Size</div>
-                        <NativeSelect onChange={e => onSizeChange(Number.parseInt(e.target.value))}>
-                            <NativeSelectOptGroup>
-                                <NativeSelectOption value={10}>10</NativeSelectOption>
-                                <NativeSelectOption value={25}>25</NativeSelectOption>
-                                <NativeSelectOption value={50}>50</NativeSelectOption>
-                            </NativeSelectOptGroup>
+                        <NativeSelect value={10} onChange={e => onSizeChange(Number.parseInt(e.target.value))}>
+                            <NativeSelectOption value={10}>10</NativeSelectOption>
+                            <NativeSelectOption value={25}>25</NativeSelectOption>
+                            <NativeSelectOption value={50}>50</NativeSelectOption>
                         </NativeSelect>
                     </div>
 
