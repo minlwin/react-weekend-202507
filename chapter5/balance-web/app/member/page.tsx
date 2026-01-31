@@ -1,4 +1,6 @@
+import PageTitle from "@/components/widgets/page-title";
 import { Metadata } from "next";
+import DashboardComponent from "./_client/dashboard";
 
 export const metadata: Metadata = {
   title: "BALANCE | Home",
@@ -8,6 +10,9 @@ export const metadata: Metadata = {
 
 export default function MemberPage() {
     return (
-        <>Member</>
+        <section className="space-y-6">
+            <PageTitle title="Welcome!" icon="Smile" />
+            <DashboardComponent />
+        </section>
     )
 }

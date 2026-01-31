@@ -1,18 +1,16 @@
-'use client'
+"use client"
 
-import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
-import { ChartData, MonthData } from "@/lib/schema/admin/summary.schema"
-import { ChangeEvent, useEffect, useState } from "react"
-import * as client from "@/lib/actions/admin/summary.action"
-import { safeCall } from "@/lib/utils"
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart"
-import { Area, AreaChart, XAxis } from "recharts"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { AreaChartIcon } from "lucide-react"
 import { ChartType } from "@/lib/schema"
+import { MonthData } from "@/lib/schema/admin/summary.schema"
+import { safeCall } from "@/lib/utils"
+import { ChangeEvent, useEffect, useState } from "react"
+import * as client from "@/lib/actions/member/summary.action"
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
+import EntryProgress from "../_charts/entry-progress"
+import SummaryChart from "../_charts/summary-chart"
+import { SummaryData } from "@/lib/schema/member/summary.schema"
 
-export default function AdminDashboardComponent() {
-
+export default function DashboardComponent() {
     const [years, setYears] = useState<string[]>([])
     const [type, setType] = useState<ChartType>("Monthly")
 
@@ -20,7 +18,7 @@ export default function AdminDashboardComponent() {
     const [year, setYear] = useState<string>()
     const [month, setMonth] = useState<string>()
 
-    const [data, setData] = useState<ChartData[]>([])
+    const [summary, setSummary] = useState<SummaryData>()
 
     useEffect(() => {
         async function initData() {
@@ -51,16 +49,16 @@ export default function AdminDashboardComponent() {
 
     useEffect(() => {       
         async function loadData() {
-            setData([])
+            setSummary(undefined)
             if(year) {
                 await safeCall(async () => {
                     const response = await client.getChartData(year, month)
-                    setData(response)
+                    setSummary(response)
                 })        
             }
         }
         loadData()
-    }, [year, month, setData])
+    }, [year, month, setSummary])
 
     function changeType(event : ChangeEvent<HTMLSelectElement>) {
         var selected = event.target.value as ChartType
@@ -76,7 +74,7 @@ export default function AdminDashboardComponent() {
             setMonth(String(targetMonth.value))
         }
     }
-
+    
     return (
         <div className="space-y-4">
             <nav className="flex gap-2">
@@ -100,21 +98,16 @@ export default function AdminDashboardComponent() {
                 }
             </nav>
             
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex gap-2 items-center"><AreaChartIcon /> Member Registrations</CardTitle>
-                </CardHeader>
+            <EntryProgress data={summary?.series || []} />
 
-                <CardContent>
-                    <ChartContainer className="w-full h-116" config={{}}>
-                        <AreaChart accessibilityLayer data={data}>
-                            <XAxis dataKey="label" tickMargin={8} />
-                            <ChartTooltip />
-                            <Area dataKey="value" type={"basis"} />
-                        </AreaChart>
-                    </ChartContainer>
-                </CardContent>
-            </Card>
+            <div className="grid grid-cols-3 gap-4 h-90">
+                <SummaryChart title="Debit" data={summary?.debit || []} />
+                <SummaryChart title="Credit" data={summary?.credit || []} />
+                <SummaryChart title="Balance" data={[
+                    {label : "Debit", value : summary?.debitTotal || 0},
+                    {label : "Credit", value : summary?.creditTotal || 0}
+                ]} />
+            </div>
         </div>
     )
 }

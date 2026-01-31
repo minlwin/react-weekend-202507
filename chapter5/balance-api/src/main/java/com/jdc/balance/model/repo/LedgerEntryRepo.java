@@ -47,5 +47,14 @@ public interface LedgerEntryRepo extends BaseRepository<LedgerEntry, LedgerEntry
 			""")
 	@Modifying(flushAutomatically = true, clearAutomatically = true)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	int deleteForUpdate(@Param("accountId") int accountId, @Param("issueAt") LocalDate issueAt, @Param("entrySeq") int entrySeq);
+	int deleteForUpdate(
+			@Param("accountId") int accountId, 
+			@Param("issueAt") LocalDate issueAt, 
+			@Param("entrySeq") int entrySeq);
+	
+	@Query("select min(e.id.issueAt) from LedgerEntry e where e.id.accountId = :accountId")
+	Optional<LocalDate> getFirstIssueDate(@Param("accountId") int accountId);
+
+	@Query("select max(e.id.issueAt) from LedgerEntry e where e.id.accountId = :accountId")
+	Optional<LocalDate> getLastIssueDate(@Param("accountId") int accountId);
 }

@@ -3,7 +3,6 @@ package com.jdc.balance.model.services;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +16,7 @@ import com.jdc.balance.model.entity.Account;
 import com.jdc.balance.model.entity.Account.Role;
 import com.jdc.balance.model.entity.Account_;
 import com.jdc.balance.model.repo.AccountRepo;
+import com.jdc.balance.utils.DateTimesUtils;
 import com.jdc.balance.utils.dto.ChartData;
 
 @Service
@@ -25,7 +25,6 @@ public class AdminSummaryService {
 	
 	@Autowired
 	private AccountRepo accountRepo;
-	private static final DateTimeFormatter DF = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
 	public List<Integer> getYears() {
 		
@@ -74,7 +73,7 @@ public class AdminSummaryService {
 		
 		while(target.compareTo(yearMonth.atEndOfMonth()) <= 0) {
 			var count = findUsers(target, target);
-			result.add(new ChartData(target.format(DF), count.intValue()));
+			result.add(new ChartData(target.format(DateTimesUtils.CHART_DF), count.intValue()));
 			target = target.plusDays(1);
 		}
 		

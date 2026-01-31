@@ -3,6 +3,7 @@ package com.jdc.balance.utils;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class DateTimesUtils {
 
@@ -12,4 +13,6 @@ public class DateTimesUtils {
 		}
 		return null;
 	}
+	
+	public static final DateTimeFormatter CHART_DF = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 }

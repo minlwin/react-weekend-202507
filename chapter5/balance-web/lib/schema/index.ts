@@ -32,3 +32,5 @@ export type ApplicationError = {
     logout: boolean
     message: string []
 }
+
+export type ChartType = "Yearly" | "Monthly"

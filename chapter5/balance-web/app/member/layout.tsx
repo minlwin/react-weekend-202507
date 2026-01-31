@@ -6,7 +6,7 @@ export default async function MemberLayout({children} : {children : React.ReactN
     
     return (
         <div className="min-h-screen">
-            <nav className="px-6 py-4 shadow flex items-center justify-between bg-blue-800 text-white ">
+            <nav className="px-6 py-4 shadow flex items-center justify-between bg-blue-800 text-white sticky top-0 z-50">
                 <IconLink icon="Home" url="/member" title="BALANCE HOME" className="font-semibold" />
 
                 <div className="flex items-center gap-8">
